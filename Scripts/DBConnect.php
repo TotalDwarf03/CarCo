@@ -9,7 +9,4 @@
         $msg .= " (" . mysqli_connect_errno() . ")";
         exit($msg);
     }
-    // else{
-    //     echo("DB Connection Successful.");
-    // }
 ?>

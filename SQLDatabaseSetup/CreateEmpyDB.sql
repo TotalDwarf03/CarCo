@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 24, 2023 at 02:54 PM
+-- Generation Time: Oct 30, 2023 at 02:47 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -14,8 +14,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `carco`
 --
-CREATE DATABASE IF NOT EXISTS `carco` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `carco`;
 
 -- --------------------------------------------------------
 
@@ -28,6 +26,7 @@ CREATE TABLE `tblcustomer` (
   `Forename` varchar(20) DEFAULT NULL,
   `Surname` varchar(20) DEFAULT NULL,
   `BusinessName` varchar(50) DEFAULT NULL,
+  `Image` varchar(50) DEFAULT NULL,
   `AddressLine1` varchar(30) NOT NULL,
   `AddressLine2` varchar(30) NOT NULL,
   `AddressLine3` varchar(30) NOT NULL,
@@ -35,11 +34,6 @@ CREATE TABLE `tblcustomer` (
   `Telephone` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblcustomer`
---
-
-TRUNCATE TABLE `tblcustomer`;
 -- --------------------------------------------------------
 
 --
@@ -54,11 +48,6 @@ CREATE TABLE `tblcustomerlogin` (
   `Email` varchar(60) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblcustomerlogin`
---
-
-TRUNCATE TABLE `tblcustomerlogin`;
 -- --------------------------------------------------------
 
 --
@@ -74,11 +63,6 @@ CREATE TABLE `tblorder` (
   `DeliveryDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblorder`
---
-
-TRUNCATE TABLE `tblorder`;
 -- --------------------------------------------------------
 
 --
@@ -93,11 +77,6 @@ CREATE TABLE `tblorderproducts` (
   `Subtotal` float(7,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblorderproducts`
---
-
-TRUNCATE TABLE `tblorderproducts`;
 -- --------------------------------------------------------
 
 --
@@ -110,11 +89,6 @@ CREATE TABLE `tblpermissions` (
   `Description` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblpermissions`
---
-
-TRUNCATE TABLE `tblpermissions`;
 --
 -- Dumping data for table `tblpermissions`
 --
@@ -137,15 +111,11 @@ CREATE TABLE `tblstaff` (
   `Forename` varchar(20) NOT NULL,
   `Surname` varchar(20) NOT NULL,
   `Email` varchar(60) NOT NULL,
+  `Image` varchar(50) DEFAULT NULL,
   `Username` varchar(20) NOT NULL,
   `Password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblstaff`
---
-
-TRUNCATE TABLE `tblstaff`;
 -- --------------------------------------------------------
 
 --
@@ -158,11 +128,6 @@ CREATE TABLE `tblstaffpermissions` (
   `PermissionID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblstaffpermissions`
---
-
-TRUNCATE TABLE `tblstaffpermissions`;
 -- --------------------------------------------------------
 
 --
@@ -174,14 +139,10 @@ CREATE TABLE `tblsystemproduct` (
   `SystemProductTypeID` int(11) NOT NULL,
   `ProductName` varchar(40) NOT NULL,
   `Description` varchar(255) NOT NULL,
+  `Image` varchar(50) DEFAULT NULL,
   `CostPerUnit` float(5,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblsystemproduct`
---
-
-TRUNCATE TABLE `tblsystemproduct`;
 -- --------------------------------------------------------
 
 --
@@ -193,11 +154,6 @@ CREATE TABLE `tblsystemproducttype` (
   `Type` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Truncate table before insert `tblsystemproducttype`
---
-
-TRUNCATE TABLE `tblsystemproducttype`;
 --
 -- Indexes for dumped tables
 --
