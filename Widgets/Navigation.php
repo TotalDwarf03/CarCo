@@ -11,26 +11,17 @@
             if($PageName == 'login'){
                 return "style='display:none;'";
             }
-            if($PageName == 'logout'){
+            elseif($PageName == 'logout'){
                 return '';
             }
-
-            if($_SESSION['UserType'] == 'Staff'){
-                // If Logged in User is a Staff Member
-                if(in_array($permissionID, $_SESSION['PermissionList'])){
-                    // Show if Passed Permission in Permission List (Gathered From Database)
-                    return '';
+            else{
+                if($_SESSION['UserType'] == 'Staff'){
+                    // If Staff
+                    // Put permission logic here :)
                 }
                 else {
-                    // Hide if not
+                    // If Customer
                     return "style='display:none;'";
-                }
-            }
-            else {
-                // If Logged in User is a Customer
-                // Show Orders Page
-                if($PageName == 'ViewOrders'){
-                    return '';
                 }
             }
         }
@@ -41,7 +32,10 @@
             if($PageName == 'login'){
                 return '';
             }
-            if($PageName == 'logout'){
+            elseif($PageName == 'logout'){
+                return "style='display:none;'";
+            }
+            else {
                 return "style='display:none;'";
             }
         }
@@ -54,6 +48,10 @@
     <nav>
         <ul>
             <li><a <?php echo(getActivePage('index.php')); ?> href='index.php'>Home</a></li>
+            <li><a <?php echo(getActivePage('vieworders.php') . ' ' . showOnPermissions(-1, 'vieworders')); ?> href='vieworders.php'>Orders</a></li>
+            <li><a <?php echo(getActivePage('viewproducts.php')); ?> href='viewproducts.php'>Products</a></li>
+            <li><a <?php echo(getActivePage('viewcustomers.php') . ' ' . showOnPermissions(-1, 'viewcustomers')); ?> href='viewcustomers.php'>Customers</a></li>
+            <li><a <?php echo(getActivePage('viewstaff.php') . ' ' . showOnPermissions(-1, 'viewstaff')); ?> href='viewstaff.php'>Staff</a></li>
             <li><a <?php echo(getActivePage('login.php') . ' ' . showOnPermissions(-1, 'login')); ?> href='login.php'>Login</a></li>
             <li><a <?php echo(getActivePage('logout.php') . ' ' . showOnPermissions(-1, 'logout')); ?> href='logout.php'>Logout</a></li>
         </ul>
