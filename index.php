@@ -1,3 +1,5 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +9,6 @@
     <title>CarCo - Home</title>
 </head>
 <body class="CentrePage">
-    <?php include("Widgets/Navigation.php") ?>
+    <?php include("Widgets/navigation.php") ?>
 </body>
 </html>
