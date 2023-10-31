@@ -45,15 +45,48 @@
 
         $userinfo = mysqli_fetch_assoc($result);
         mysqli_free_result($result);
+        mysqli_close($db);
         return $userinfo;
     }
 
-    function login($user){
+    function getUserPerms($user){
+        if($user['UserType'] == 'Staff') {
+            include('Scripts/DBConnect.php');
+
+            $userID = $user['UserID'];
+
+            $sql = "SELECT sp.PermissionID
+                    FROM tblStaffPermissions sp
+                    WHERE sp.StaffID = '$userID'";
+
+            $result = mysqli_query($db, $sql);
+
+            $userPermissions = array();
+
+            while($row = mysqli_fetch_assoc($result)){
+                array_push($userPermissions, $row['PermissionID']);
+            }
+
+            mysqli_free_result($result);
+            mysqli_close($db);
+
+            return $userPermissions;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function login($user, $userPermissions){
         $_SESSION['UserID'] = $user['UserID'];
         $_SESSION['Username'] = $user['Username'];
         $_SESSION['UserType'] = $user['UserType'];
         $_SESSION['Name'] = $user['Forename'] . ' ' . $user['Surname'];
         $_SESSION['Image'] = $user['Image'];
+
+        if($userPermissions){
+            $_SESSION['UserPermissions'] = $userPermissions;
+        }
         
         return(true);
     }
@@ -66,13 +99,14 @@
         $user = findUser($username);
       
         if($user){
-          if(password_verify($password, $user['Password'])){
-            login($user);
-            header("location: index.php");
-            exit();
-          }else{
-            $loginStatus = 'Incorrect Password.';
-          }
+            if(password_verify($password, $user['Password'])){
+                $userPermissions = getUserPerms($user);
+                login($user, $userPermissions);
+                header("location: index.php");
+                exit();
+            }else{
+                $loginStatus = 'Incorrect Password.';
+            }
         }
         else{
             $loginStatus = 'User Not Found.';
