@@ -10,8 +10,6 @@ body {
 }
 
 header {
-    float: left;
-
     width: 100%;
     background-color: darkslategray;
     text-align: center;
