@@ -1,5 +1,9 @@
+h1, h2, h3 {
+    margin: 0;
+}
+
 body {
-    background-color: white;
+    background-color: gainsboro;
 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -9,24 +13,36 @@ body {
     width: 70%;
 }
 
+div.content {
+    text-align: center;
+    background-color: white;
+}
+
 header {
     width: 100%;
     background-color: darkslategray;
     text-align: center;
-    height: 80px;
+}
+
+footer {
+    height: 100px;
+    width: 100%;
+
+    text-align: center;
+    margin: 0;
 }
 
 #SiteLogo {
     float: left;
-    padding-left: 10px;
+    padding: 0 10px 0 10px;
     color: white;
 }
 
 nav ul {
     list-style: none;
     overflow: hidden;
-
-    height: 80px;
+    
+    margin: 0;
 }
 
 nav ul li {
@@ -45,4 +61,8 @@ nav ul li a {
 
 nav ul li a.active {
     color: antiquewhite;
+}
+
+a {
+    text-decoration: wavy;
 }
