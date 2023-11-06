@@ -31,7 +31,6 @@
             <br>
             Our operating hours are 09:00-17:00 Monday-Saturday.
         </p>
-        <br>
     </div>
 
     <?php include("Widgets/footer.php") ?>
