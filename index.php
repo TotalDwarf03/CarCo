@@ -1,4 +1,10 @@
-<?php session_start(); ?>
+<?php 
+    session_start(); 
+
+    function CalculateImageSize(){
+
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +16,12 @@
 </head>
 <body class="CentrePage">
     <?php include("Widgets/navigation.php") ?>
+
+    <div id="UserProfile">
+        Welcome <?php echo $_SESSION['Name']; ?>! 
+        <br>
+        <img src="<?php echo $_SESSION['Image'] ?>" alt="User Profile Image" <?php CalculateImageSize(); ?>>
+    </div>
 
     <div class="content">
         <h2 style="padding-top: 10px;">Welcome to CarCo's Online Portal!</h2>

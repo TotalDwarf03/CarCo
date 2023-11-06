@@ -20,6 +20,10 @@ div.content {
     padding: 10px 0 10px 0;
 }
 
+#UserProfile {
+    float: right;
+}
+
 header {
     width: 100%;
     background-color: darkslategray;
@@ -39,6 +43,8 @@ footer {
     padding: 0 10px 0 10px;
     color: white;
 }
+
+/* Navigation */
 
 nav ul {
     list-style: none;
