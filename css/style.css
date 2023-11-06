@@ -16,6 +16,8 @@ body {
 div.content {
     text-align: center;
     background-color: white;
+
+    padding: 10px 0 10px 0;
 }
 
 header {

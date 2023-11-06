@@ -34,10 +34,12 @@
 <body class="CentrePage">
     <?php include("Widgets/navigation.php") ?>
 
-    <div>
+    <div class="content">
         <p>Are you sure you want to logout?</p>
         <button onclick="confirmLogout()">Confirm</button>
         <button onclick="cancelLogout()">Cancel</button>
     </div>
+
+    <?php include("Widgets/footer.php") ?>
 </body>
 </html>
