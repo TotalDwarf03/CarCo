@@ -2,12 +2,12 @@
     // Creates a Staff Member and Permissions to Start Interaction
     include('DBConnect.php');
 
-    $Forename = 'Kieran';
-    $Surname = 'Pritchard';
-    $Email = 'Kieran@CarCo.com';
-    $Image = '';
-    $Username = 'Admin';
-    $Password = password_hash('admin', PASSWORD_BCRYPT);
+    $Forename = 'Bob';
+    $Surname = 'Smiles';
+    $Email = 'Bob@CarCo.com';
+    $Image = 'Images/Staff/5-UserManager.png';
+    $Username = 'UserManager';
+    $Password = password_hash('password', PASSWORD_BCRYPT);
 
     $sql = "INSERT INTO tblStaff (Forename, Surname, Email, Image, Username, Password)
             VALUES ('$Forename', '$Surname', '$Email', '$Image', '$Username', '$Password')";

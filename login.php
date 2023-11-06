@@ -73,7 +73,7 @@
             return $userPermissions;
         }
         else {
-            return false;
+            return [];
         }
     }
 
@@ -84,9 +84,7 @@
         $_SESSION['Name'] = $user['Forename'] . ' ' . $user['Surname'];
         $_SESSION['Image'] = $user['Image'];
 
-        if($userPermissions){
-            $_SESSION['UserPermissions'] = $userPermissions;
-        }
+        $_SESSION['UserPermissions'] = $userPermissions;
         
         return(true);
     }
