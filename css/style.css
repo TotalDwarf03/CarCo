@@ -8,26 +8,6 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.CentrePage {
-    margin: 0 auto;
-    width: 70%;
-}
-
-div.content {
-    text-align: center;
-    background-color: white;
-
-    padding: 10px 0 10px 0;
-}
-
-#UserProfile {
-    float: right;
-    text-align: center;
-
-    width: 30%;
-    border: solid 2px black;
-}
-
 header {
     width: 100%;
     background-color: darkslategray;
@@ -40,6 +20,30 @@ footer {
 
     text-align: center;
     margin: 0;
+}
+
+.CentrePage {
+    margin: 0 auto;
+    width: 70%;
+}
+
+div.content {
+    text-align: center;
+    background-color: white;
+
+    padding: 10px 0 10px 0;
+}
+
+.message {
+    color: red;
+}
+
+#UserProfile {
+    float: right;
+    text-align: center;
+
+    width: 30%;
+    border: solid 2px black;
 }
 
 #SiteLogo {

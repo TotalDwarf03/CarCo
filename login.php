@@ -136,7 +136,7 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password">
 
-                <p style="color: red;">
+                <p class="message">
                     <?php echo $loginStatus ?>
                 </p>
 

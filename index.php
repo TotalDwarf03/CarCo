@@ -22,6 +22,10 @@
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
 
             <?php include("Widgets/UploadForm.php") ?>
+            
+            <p class="message">
+                <?php echo(isset($_GET['UploadStatus']) ? $_GET['UploadStatus'] : ''); ?>
+            </p>
         </div>
 
         <section style="<?php echo(isset($_SESSION['UserID']) ? 'width: 70%;' : ''); ?>">
