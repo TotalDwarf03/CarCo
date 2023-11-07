@@ -22,6 +22,10 @@ div.content {
 
 #UserProfile {
     float: right;
+    text-align: center;
+
+    width: 30%;
+    border: solid 2px black;
 }
 
 header {
@@ -73,4 +77,10 @@ nav ul li a.active {
 
 a {
     text-decoration: wavy;
+}
+
+/* forms */
+
+fieldset {
+    text-align: left;
 }
