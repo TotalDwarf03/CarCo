@@ -1,11 +1,15 @@
 <?php
     session_start();
 
+    $UserType = '';
     $username = '';
     $loginStatus = '';
 
-    function findUser(string $username){
+    function findUser(string $username, string $UserType){
         include('Scripts/DBConnect.php');
+
+        $StaffResult;
+        $CustomerResult;
 
         // Finds a Staff or Customer Login based on given username
         $StaffQuery = " SELECT
@@ -34,19 +38,17 @@
                             WHERE cl.Username = '$username'
                             LIMIT 1";
 
-        $result = mysqli_query($db, $StaffQuery);
+        $result = mysqli_query($db, ($UserType == 'Staff') ? $StaffQuery : $CustomerQuery);
 
         if(!$result){
-            $result = mysqli_query($db, $CustomerQuery);
-            if(!$result){
-                exit("User Doesn't Exist.");
-            }
+            exit('User Not Found');
         }
-
-        $userinfo = mysqli_fetch_assoc($result);
-        mysqli_free_result($result);
-        mysqli_close($db);
-        return $userinfo;
+        else{
+            $userinfo = mysqli_fetch_assoc($result);
+            mysqli_free_result($result);
+            mysqli_close($db);
+            return $userinfo;
+        }        
     }
 
     function getUserPerms($user){
@@ -91,10 +93,11 @@
 
     if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
+        $UserType = $_POST['usertype'] ?? '';
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
       
-        $user = findUser($username);
+        $user = findUser($username, $UserType);
       
         if($user){
             if(password_verify($password, $user['Password'])){
@@ -127,6 +130,19 @@
         <form action="login.php" method="post">
             <fieldset>
                 <legend><h2>Login:</h2></legend>
+
+                <p>
+                    <b>Select User Type:</b>
+                </p>
+                <input type="radio" id="Staff" name="usertype" value="Staff" <?php echo(($UserType == 'Staff') ? "checked=true" : ""); ?>>
+                <label for="Staff">Staff</label>
+
+                <input type="radio" id="Customer" name="usertype" value="Customer" <?php echo(($UserType == 'Customer') ? "checked=true" : ""); ?>>
+                <label for="Customer">Customer</label>
+
+                <p>
+                    <b>Login Details:</b>
+                </p>
 
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" value="<?php echo $username; ?>">
