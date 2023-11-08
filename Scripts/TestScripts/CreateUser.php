@@ -3,11 +3,11 @@
     include('../DBConnect.php');
 
     $CustomerID = 1;
-    $Forename = 'Steve';
-    $Surname = 'Daniel';
-    $Email = 'Steve@BSS.co.uk';
+    $Forename = 'Ceri';
+    $Surname = 'Ryall';
+    $Email = 'Ceri@BSS.co.uk';
     $Image = '';
-    $Username = 'BSSSteve';
+    $Username = 'BSSCeri';
     $Password = password_hash('password', PASSWORD_BCRYPT);
 
     // $sql = "INSERT INTO tblStaff (Forename, Surname, Email, Image, Username, Password)

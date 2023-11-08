@@ -38,10 +38,19 @@
                             WHERE cl.Username = '$username'
                             LIMIT 1";
 
-        $result = mysqli_query($db, ($UserType == 'Staff') ? $StaffQuery : $CustomerQuery);
+        switch($UserType){
+            case "Staff":
+                $result = mysqli_query($db, $StaffQuery);
+                break;
+            case "Customer":
+                $result = mysqli_query($db, $CustomerQuery);
+                break;
+            default:
+                $result = false;
+        }
 
-        if(!$result){
-            exit('User Not Found');
+        if($result == false){
+            return false;
         }
         else{
             $userinfo = mysqli_fetch_assoc($result);
