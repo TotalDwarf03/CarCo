@@ -21,7 +21,11 @@
             <br>
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
 
-            <?php include("Widgets/UploadForm.php") ?>
+            <?php 
+                if($_SESSION['UserType'] == 'Staff'){
+                    include("Widgets/UploadForm.php");
+                }
+            ?>
             
             <p class="message">
                 <?php echo(isset($_GET['UploadStatus']) ? $_GET['UploadStatus'] : ''); ?>
