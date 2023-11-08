@@ -46,6 +46,10 @@ div.content {
     border: solid 2px black;
 }
 
+#UserProfile h2 {
+    border-bottom: solid 2px black;
+}
+
 #SiteLogo {
     float: left;
     padding: 0 10px 0 10px;
