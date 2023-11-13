@@ -116,3 +116,11 @@ table {
 td, th {
     padding: 10px;
 }
+
+td.edit, td.delete {
+    font-size: 32px;
+}
+
+td.edit:hover, td.delete:hover {
+    background-color: lightgray;
+}

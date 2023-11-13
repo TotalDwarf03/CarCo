@@ -4,6 +4,24 @@
     include('Scripts/ScaleImage.php');
     include('Scripts/DBConnect.php');
 
+
+    function hideContent() {
+        // If no permission, hide content
+        if(isset($_SESSION['UserID'])){
+            if(in_array(3, $_SESSION['UserPermissions'])) {
+                // If have Product Manager Permission (id = 3)
+                return '';
+            }
+            else {
+                return "style='display:none;'";
+            }
+        }
+        else {
+            return "style='display:none;'";
+        }
+    }
+
+
     $SearchText = $_GET['SearchText'] ?? '';
     $ResultLimit = $_GET['ResultLimit'] ?? 10;
     $ResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
@@ -54,12 +72,16 @@
                 <caption><h3>Products</h3></caption>
                 <thead>
                     <tr>
-                        <th><strong>Product</strong></th>
-                        <th><strong>Type</strong></th>
-                        <th><strong>Description</strong></th>
-                        <th><strong>Image</strong></th>
-                        <th><strong>Cost</strong></th>
-                        <th><strong>Status</strong></th>
+                        <th>Product</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Image</th>
+                        <th>Cost</th>
+                        <th>Status</th>
+
+                        <!-- Edit and Delete -->
+                        <th <?php echo(hideContent()); ?>>Edit</th>
+                        <th <?php echo(hideContent()); ?>>Delete</th>
                     </tr>
                 </thead>
 
@@ -76,6 +98,7 @@
 
                                 $imgSize = ScaleImage(150, $Img);
                                 $stockHighlight = $Status == 'In Stock' ? "style='background-color: lightgreen;'" : "style='background-color: lightcoral;'";
+                                $permissionCheck = hideContent();
 
                                 echo("  
                                         <tr>
@@ -85,6 +108,8 @@
                                             <td><img src='$Img' alt='Product Image' $imgSize onclick='maximiseImage()'></td>
                                             <td>£$Cost</td>
                                             <td $stockHighlight>$Status</td>
+                                            <td class='edit' $permissionCheck>&#128393;</td>
+                                            <td class='delete' $permissionCheck>&#128465;</td>
                                         </tr>
                                     ");
                             }
