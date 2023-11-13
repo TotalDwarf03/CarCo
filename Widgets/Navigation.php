@@ -59,7 +59,7 @@
     }
 ?>
 
-<header>
+<header class="navbar">
     <h1 id="SiteLogo">CarCo</h1>
 
     <nav>

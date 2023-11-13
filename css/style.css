@@ -8,7 +8,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-header {
+header.navbar {
     width: 100%;
     background-color: darkslategray;
     text-align: center;
@@ -27,7 +27,7 @@ footer {
     width: 70%;
 }
 
-div.content {
+main.content {
     text-align: center;
     background-color: white;
 
@@ -54,6 +54,14 @@ div.content {
     float: left;
     padding: 0 10px 0 10px;
     color: white;
+}
+
+#Searchbar input {
+    font-size: 24px;
+}
+
+#Searchbar button {
+    font-size: 24px;
 }
 
 /* Navigation */
@@ -91,4 +99,20 @@ a {
 
 fieldset {
     text-align: left;
+}
+
+/* Tables */
+
+table, th, td {
+    border-bottom: solid 2px black;
+}
+
+table {
+    width: 60%;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+td, th {
+    padding: 10px;
 }

@@ -1,5 +1,7 @@
 <?php 
     session_start(); 
+
+    include('Scripts/ScaleImage.php');
 ?>
 
 <!DOCTYPE html>
@@ -13,11 +15,17 @@
 <body class="CentrePage">
     <?php include("Widgets/navigation.php") ?>
 
-    <div class="content">
-        <div id="UserProfile" style="<?php echo(isset($_SESSION['UserID']) ? '' : 'display:none;'); ?>">
-            <h2>User Profile</h2>
+    <main class="content">
+        <section id="UserProfile" style="<?php echo(isset($_SESSION['UserID']) ? '' : 'display:none;'); ?>">
+            <header>
+                <h2>User Profile</h2>
+            </header>
 
-            <img src="<?php echo $_SESSION['Image'] ?>" alt="User Profile Image" width="300">
+            <img 
+                src="<?php echo $_SESSION['Image'] ?>" 
+                alt="User Profile Image" 
+                <?php echo(isset($_SESSION['Image']) ? ScaleImage(300, $_SESSION['Image']) : ''); ?>
+            >
             <br>
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
 
@@ -30,10 +38,12 @@
             <p class="message">
                 <?php echo(isset($_GET['UploadStatus']) ? $_GET['UploadStatus'] : ''); ?>
             </p>
-        </div>
+        </section>
 
         <section style="<?php echo(isset($_SESSION['UserID']) ? 'width: 70%;' : ''); ?>">
-            <h2 style="padding-top: 10px;">Welcome to CarCo's Online Portal!</h2>
+            <header>
+                <h2 style="padding-top: 10px;">Welcome to CarCo's Online Portal!</h2>
+            </header>
 
             <img src="Images/CarParts.jpg" alt="Image of Car Parts" height="300px">
 
@@ -53,7 +63,7 @@
                 Our operating hours are 09:00-17:00 Monday-Saturday.
             </p>
         </section>
-    </div>
+    </main>
 
     <?php include("Widgets/footer.php") ?>
 </body>

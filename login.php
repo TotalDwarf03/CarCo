@@ -135,7 +135,7 @@
 <body class="CentrePage">
     <?php include("Widgets/navigation.php") ?>
 
-    <div class="content">
+    <main class="content">
         <form action="login.php" method="post">
             <fieldset>
                 <legend><h2>Login:</h2></legend>
@@ -169,7 +169,7 @@
 
             </fieldset>
         </form>
-    </div>
+    </main>
 
     <?php include("Widgets/footer.php") ?>
 </body>
