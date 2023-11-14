@@ -14,4 +14,19 @@
             return '';
         }
     }
+
+    function hideContent(int $PermissionID) {
+        // If no permission, hide content
+        if(isset($_SESSION['UserID'])){
+            if(in_array($PermissionID, $_SESSION['UserPermissions'])) {
+                return '';
+            }
+            else {
+                return "style='display:none;'";
+            }
+        }
+        else {
+            return "style='display:none;'";
+        }
+    }
 ?>

@@ -1,26 +1,25 @@
 <?php 
     session_start(); 
 
-    include('Scripts/ScaleImage.php');
+    include('Scripts/GeneralScripts.php');
     include('Scripts/DBConnect.php');
 
-
-    function hideContent() {
-        // If no permission, hide content
+    function getProductsWidth() {
+        // If logged in and have product manager permission (id=3),
+        // Product Manager aside will display therefore width should be 70%
+        // Else, use 100%
         if(isset($_SESSION['UserID'])){
             if(in_array(3, $_SESSION['UserPermissions'])) {
-                // If have Product Manager Permission (id = 3)
-                return '';
+                return '70%';
             }
             else {
-                return "style='display:none;'";
+                return "100%";
             }
         }
         else {
-            return "style='display:none;'";
+            return "100%";
         }
     }
-
 
     $SearchText = $_GET['SearchText'] ?? '';
     $ResultLimit = $_GET['ResultLimit'] ?? 10;
@@ -48,6 +47,19 @@
     $Products = mysqli_query($db, $sqlProducts);
 ?>
 
+<script>
+    function showNewForm(){
+        NewProductForm = document.getElementById("NewProductForm")
+
+        if(NewProductForm.hidden){
+            NewProductForm.hidden = false;
+        }
+        else{
+            NewProductForm.hidden = true;
+        }
+    }
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,16 +72,27 @@
     <?php include("Widgets/navigation.php") ?>
 
     <main class="content">
-        <h2>Our Products:</h2>
+        <aside class="ManagerTools" <?php echo(hideContent(3)); ?>>
+            <h2>Manager Tools</h2>
+        
+            <button type="button" onclick="showNewForm()">Add New Product</button>
+
+            <form id="NewProductForm" hidden>
+                <fieldset>
+                    <legend><h3>Add New Product:</h3></legend>
+                </fieldset>
+            </form>
+
+        </aside>
 
         <!-- Products -->
-        <section>
+        <section id="Products" style="width: <?php echo(getProductsWidth()); ?>;">
             <?php include("Widgets/SearchBar.php"); ?>
 
             <br>
 
             <table>
-                <caption><h3>Products</h3></caption>
+                <caption><h2>Products</h2></caption>
                 <thead>
                     <tr>
                         <th>Product</th>
@@ -80,8 +103,7 @@
                         <th>Status</th>
 
                         <!-- Edit and Delete -->
-                        <th <?php echo(hideContent()); ?>>Edit</th>
-                        <th <?php echo(hideContent()); ?>>Delete</th>
+                        <th <?php echo(hideContent(3)); ?>>Edit</th>
                     </tr>
                 </thead>
 
@@ -98,7 +120,7 @@
 
                                 $imgSize = ScaleImage(150, $Img);
                                 $stockHighlight = $Status == 'In Stock' ? "style='background-color: lightgreen;'" : "style='background-color: lightcoral;'";
-                                $permissionCheck = hideContent();
+                                $permissionCheck = hideContent(3);
 
                                 echo("  
                                         <tr>
@@ -109,7 +131,6 @@
                                             <td>£$Cost</td>
                                             <td $stockHighlight>$Status</td>
                                             <td class='edit' $permissionCheck>&#128393;</td>
-                                            <td class='delete' $permissionCheck>&#128465;</td>
                                         </tr>
                                     ");
                             }

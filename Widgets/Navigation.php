@@ -62,7 +62,7 @@
 <header class="navbar">
     <h1 id="SiteLogo">CarCo</h1>
 
-    <nav>
+    <nav class="mainNav">
         <ul>
             <li><a <?php echo(getActivePage('index.php')); ?> href='index.php'>Home</a></li>
             <li><a <?php echo(getActivePage('vieworders.php') . ' ' . showOnPermissions(5, 'vieworders')); ?> href='vieworders.php'>Orders</a></li>

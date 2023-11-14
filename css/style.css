@@ -38,6 +38,33 @@ main.content {
     color: red;
 }
 
+#Searchbar input {
+    font-size: 24px;
+}
+
+#Searchbar button {
+    font-size: 24px;
+}
+
+.ManagerTools {
+    float: right;
+    width: 30%;
+    /* border: solid 2px black; */
+}
+
+.ManagerTools h2 {
+    /* border-bottom: solid 2px black; */
+    padding: 10px;
+}
+
+.ManagerTools button {
+    font-size: 24px;
+}
+
+/* Page Specific */
+
+/* index.php */
+
 #UserProfile {
     float: right;
     text-align: center;
@@ -56,29 +83,26 @@ main.content {
     color: white;
 }
 
-#Searchbar input {
-    font-size: 24px;
-}
+/* viewproducts.php */
 
-#Searchbar button {
-    font-size: 24px;
-}
+
 
 /* Navigation */
 
-nav ul {
+/* Main Nav */
+.mainNav ul {
     list-style: none;
     overflow: hidden;
     
     margin: 0;
 }
 
-nav ul li {
+.mainNav ul li {
     display: inline;
     float: left;
 }
 
-nav ul li a {
+.mainNav ul li a {
     display: block;
     text-align: center;
     padding: 14px 16px;
@@ -87,9 +111,11 @@ nav ul li a {
     text-decoration: none;
 }
 
-nav ul li a.active {
+.mainNav ul li a.active {
     color: antiquewhite;
 }
+
+/* Anchor */
 
 a {
     text-decoration: wavy;
@@ -108,7 +134,7 @@ table, th, td {
 }
 
 table {
-    width: 60%;
+    width: 80%;
     border-collapse: collapse;
     margin: auto;
 }

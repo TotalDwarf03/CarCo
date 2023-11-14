@@ -1,7 +1,7 @@
 <?php 
     session_start(); 
 
-    include('Scripts/ScaleImage.php');
+    include('Scripts/GeneralScripts.php');
 ?>
 
 <!DOCTYPE html>
