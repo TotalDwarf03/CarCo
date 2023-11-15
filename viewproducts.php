@@ -21,6 +21,7 @@
         }
     }
 
+    // Get Data for Main Products Table
     $SearchText = $_GET['SearchText'] ?? '';
     $ResultLimit = $_GET['ResultLimit'] ?? 10;
     $ResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
@@ -44,7 +45,24 @@
                         sp.ProductName
                     $ResultLimit";
     
+    // Get data for New Product Form Drop Downs
     $Products = mysqli_query($db, $sqlProducts);
+
+    $sqlProdStatus = "  SELECT
+                            sps.ProductStatusID,
+                            sps.Status
+                        FROM tblSystemProductStatus sps
+                        ORDER BY sps.Status";
+
+    $ProductStatus = mysqli_query($db, $sqlProdStatus);
+
+    $sqlProdType = "SELECT
+                        spt.SystemProductTypeID,
+                        spt.Type
+                    FROM tblSystemProductType spt
+                    ORDER BY spt.Type";
+    
+    $ProductType = mysqli_query($db, $sqlProdType);
 ?>
 
 <script>
@@ -57,6 +75,16 @@
         else{
             NewProductForm.hidden = true;
         }
+    }
+
+    function ConfirmNewProduct(){
+        document.getElementById("submit").disabled = false;
+        document.getElementById("ConfirmProduct").disabled = true;
+    }
+
+    function UnConfirmNewProduct(){
+        document.getElementById("submit").disabled = true;
+        document.getElementById("ConfirmProduct").disabled = false;
     }
 </script>
 
@@ -74,12 +102,76 @@
     <main class="content">
         <aside class="ManagerTools" <?php echo(hideContent(3)); ?>>
             <h2>Manager Tools</h2>
+
+            <p class="message"><?php echo($_GET['UploadStatus'] ?? '') ?></p>
         
             <button type="button" onclick="showNewForm()">Add New Product</button>
 
-            <form id="NewProductForm" hidden>
+            <form id="NewProductForm" hidden action="addproduct.php" method="post" enctype="multipart/form-data">
                 <fieldset>
                     <legend><h3>Add New Product:</h3></legend>
+
+                    <!-- Product Name -->
+                    <label for="ProductName">Product: </label>
+                    <input type="text" id="ProductName" name="ProductName" required maxlength="40">
+                    <br>
+                    <!-- Product Description -->
+                    <label for="Description">Description: </label>
+                    <input type="text" id="Description" name="Description" required maxlength="255">
+                    <br>
+                    <!-- Cost -->
+                    <label for="Cost">Cost: </label>
+                    <input type="number" id="Cost" name="Cost" min="0" max="999.99" step="0.01" required>
+                    <br>
+                    <!-- Product Status -->
+                    <label for="Status">Product Status: </label>
+                    <select id="Status" name="Status">
+                        <optgroup label="Product Status:">
+                            <?php
+                                if($ProductStatus->num_rows>0){
+                                    while($row = mysqli_fetch_assoc($ProductStatus)){
+                                        $ProductStatusID = $row['ProductStatusID'];
+                                        $Status = $row['Status'];
+
+                                        echo("
+                                                <option value='$ProductStatusID'>$Status</option>
+                                            ");
+                                    }
+                                }
+                            ?>
+                        </optgroup>
+                    </select>
+                    <br>
+                    <!-- Product Type -->
+                    <label for="Type">Product Type: </label>
+                    <select id="Type" name="Type">
+                        <optgroup label="Product Type:">
+                            <?php
+                                if($ProductType->num_rows>0){
+                                    while($row = mysqli_fetch_assoc($ProductType)){
+                                        $ProductTypeID = $row['SystemProductTypeID'];
+                                        $Type = $row['Type'];
+
+                                        echo("
+                                                <option value='$ProductTypeID'>$Type</option>
+                                            ");
+                                    }
+                                }
+                            ?>
+                        </optgroup>
+                    </select>
+                    <br>
+                    <!-- Image -->
+                    <label for="fileToUpload">Image: </label>
+                    <input type="file" id="fileToUpload" name="fileToUpload" required>
+                    <br>
+                    <hr>
+                    <!-- confirm -->
+                    <input type="button" id="ConfirmProduct" name="ConfirmProduct" value="Confirm" onclick="ConfirmNewProduct()">
+                    <!-- Submit -->
+                    <input type="submit" id="submit" name="submit" value="Submit" disabled>
+                    <!-- reset -->
+                    <input type="reset" id="reset" name="reset" value="Clear" onclick="UnConfirmNewProduct()" style="float: right;">
                 </fieldset>
             </form>
 
@@ -114,7 +206,7 @@
                                 $Product = $row['ProductName'];
                                 $Type = $row['Type'];
                                 $Desc = $row['Description'];
-                                $Img = $row['Image'];
+                                $Img = $row['Image'] ?? '';
                                 $Cost = $row['CostPerUnit'];
                                 $Status = $row['Status'];
 

@@ -1,4 +1,7 @@
 <?php
+    // Script to upload a new staff or customer image based on UploadForm.php
+    // Product Images are handled in a separate file.
+
     session_start();
     
     function cleanUp(string $target){
@@ -9,7 +12,6 @@
         include('DBConnect.php');
 
         $UserID = $_SESSION['UserID'];
-        // $ProductID = ...
 
         switch($_POST['PageName']){
             case "index.php":
@@ -26,9 +28,6 @@
                         WHERE cl.CustomerLoginID = '$UserID'
                         LIMIT 1";
                 break;
-            // case "editproduct.php":
-            //     $sql = "";
-            //     break;
         }
 
         $result = mysqli_query($db, $sql);
@@ -59,9 +58,6 @@
                                 WHERE cl.CustomerLoginID = '$UserID'
                                 LIMIT 1";
                         break;
-                    // case "editproduct.php":
-                    //     $sql = "";
-                    //     break;
                 }
     
                 if(mysqli_query($db, $sql)){
@@ -95,9 +91,6 @@
                 $dir = "../Images/Customers/";
                 $RecordID = $_SESSION['UserID'];
                 break;
-            // case "editproduct.php":
-            //     $dir = "Images/Products/";
-            //     break;
         }
 
         $target = $dir.$RecordID.'.'.$imgFileType;
