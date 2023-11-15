@@ -8,13 +8,11 @@
         $Description = $_POST['Description'];
         $Cost = $_POST['Cost'];
         $Status = $_POST['Status'];
-        $Type = $_POST['Type'];
 
 
         // 1. Insert Initial Record into the DB
         $sql = "INSERT INTO tblSystemProduct 
                     (
-                        SystemProductTypeID, 
                         SystemProductStatusID, 
                         ProductName, 
                         Description, 
@@ -22,7 +20,6 @@
                     )
                 VALUES
                     (
-                        $Type,
                         $Status,
                         '$ProductName',
                         '$Description',
@@ -57,7 +54,7 @@
                 }
 
                 if(!$UploadOk){
-                    $message = 'Error Uploading File';
+                    $message = 'Error Uploading Image, Please Edit the Record and Try Again.';
                 }
                 else {
                     if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
@@ -72,7 +69,7 @@
                         $message = "Upload Complete";
                     }
                     else {
-                        $message = "Error Uploading File";
+                        $message = "Error Uploading Image, Please Edit the Record and Try Again.";
                     }
                 }
             }

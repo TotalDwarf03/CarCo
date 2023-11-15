@@ -31,17 +31,13 @@
                         sp.Image,
                         sp.Description,
                         sp.CostPerUnit,
-                        spt.Type,
                         sps.Status
                     FROM tblSystemProduct sp
-                    JOIN tblSystemProductType spt
-                        ON sp.SystemProductTypeID = spt.SystemProductTypeID
                     JOIN tblSystemProductStatus sps
                         ON sp.SystemProductStatusID = sps.ProductStatusID
                     WHERE sp.ProductName LIKE '%$SearchText%'
                         OR sp.Description LIKE '%$SearchText%'
                     ORDER BY 
-                        spt.Type,
                         sp.ProductName
                     $ResultLimit";
     
@@ -55,14 +51,6 @@
                         ORDER BY sps.Status";
 
     $ProductStatus = mysqli_query($db, $sqlProdStatus);
-
-    $sqlProdType = "SELECT
-                        spt.SystemProductTypeID,
-                        spt.Type
-                    FROM tblSystemProductType spt
-                    ORDER BY spt.Type";
-    
-    $ProductType = mysqli_query($db, $sqlProdType);
 ?>
 
 <script>
@@ -103,7 +91,7 @@
         <aside class="ManagerTools" <?php echo(hideContent(3)); ?>>
             <h2>Manager Tools</h2>
 
-            <p class="message"><?php echo($_GET['UploadStatus'] ?? '') ?></p>
+            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
         
             <button type="button" onclick="showNewForm()">Add New Product</button>
 
@@ -142,25 +130,6 @@
                         </optgroup>
                     </select>
                     <br>
-                    <!-- Product Type -->
-                    <label for="Type">Product Type: </label>
-                    <select id="Type" name="Type">
-                        <optgroup label="Product Type:">
-                            <?php
-                                if($ProductType->num_rows>0){
-                                    while($row = mysqli_fetch_assoc($ProductType)){
-                                        $ProductTypeID = $row['SystemProductTypeID'];
-                                        $Type = $row['Type'];
-
-                                        echo("
-                                                <option value='$ProductTypeID'>$Type</option>
-                                            ");
-                                    }
-                                }
-                            ?>
-                        </optgroup>
-                    </select>
-                    <br>
                     <!-- Image -->
                     <label for="fileToUpload">Image: </label>
                     <input type="file" id="fileToUpload" name="fileToUpload" required>
@@ -188,7 +157,6 @@
                 <thead>
                     <tr>
                         <th>Product</th>
-                        <th>Type</th>
                         <th>Description</th>
                         <th>Image</th>
                         <th>Cost</th>
@@ -204,7 +172,6 @@
                         if($Products->num_rows>0){
                             while($row = mysqli_fetch_assoc($Products)) {
                                 $Product = $row['ProductName'];
-                                $Type = $row['Type'];
                                 $Desc = $row['Description'];
                                 $Img = $row['Image'] ?? '';
                                 $Cost = $row['CostPerUnit'];
@@ -217,7 +184,6 @@
                                 echo("  
                                         <tr>
                                             <td>$Product</td>
-                                            <td>$Type</td>
                                             <td>$Desc</td>
                                             <td><img src='$Img' alt='Product Image' $imgSize onclick='maximiseImage()'></td>
                                             <td>£$Cost</td>
@@ -235,7 +201,7 @@
 
                 <tfoot>
                     <tr>
-                        <td colspan="7"><i><?php echo("$Products->num_rows Results.") ?></i></td>
+                        <td colspan="6"><i><?php echo("$Products->num_rows Results.") ?></i></td>
                     </tr>
                 </tfoot>
             </table>

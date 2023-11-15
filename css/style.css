@@ -35,6 +35,10 @@ main.content {
 }
 
 .message {
+    color: green;
+}
+
+.error {
     color: red;
 }
 

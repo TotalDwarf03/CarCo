@@ -35,8 +35,8 @@
                 }
             ?>
             
-            <p class="message">
-                <?php echo(isset($_GET['UploadStatus']) ? $_GET['UploadStatus'] : ''); ?>
+            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>>
+                <?php echo($_GET['UploadStatus'] ?? ''); ?>
             </p>
         </section>
 
