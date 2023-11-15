@@ -141,6 +141,7 @@ table {
 
 td, th {
     padding: 10px;
+    text-align: center;
 }
 
 td.edit, td.delete {
@@ -148,5 +149,10 @@ td.edit, td.delete {
 }
 
 td.edit:hover, td.delete:hover {
+    background-color: lightgray;
+}
+
+tfoot {
+    text-align: center;
     background-color: lightgray;
 }

@@ -232,6 +232,12 @@
                         }
                     ?>
                 </tbody>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="7"><i><?php echo("$Products->num_rows Results.") ?></i></td>
+                    </tr>
+                </tfoot>
             </table>
         </section>
     </main>
