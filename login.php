@@ -161,7 +161,7 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password">
 
-                <p class="message">
+                <p class="error">
                     <?php echo $loginStatus ?>
                 </p>
 

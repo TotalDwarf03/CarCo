@@ -16,6 +16,7 @@
     <?php include("Widgets/navigation.php") ?>
 
     <main class="content">
+        <!-- User Profile -->
         <section id="UserProfile" style="<?php echo(isset($_SESSION['UserID']) ? '' : 'display:none;'); ?>">
             <header>
                 <h2>User Profile</h2>
@@ -40,6 +41,7 @@
             </p>
         </section>
 
+        <!-- Homepage Conent -->
         <section style="<?php echo(isset($_SESSION['UserID']) ? 'width: 70%;' : ''); ?>">
             <header>
                 <h2 style="padding-top: 10px;">Welcome to CarCo's Online Portal!</h2>

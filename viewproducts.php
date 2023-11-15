@@ -88,6 +88,7 @@
     <?php include("Widgets/navigation.php") ?>
 
     <main class="content">
+        <!-- Manager Tools Aside -->
         <aside class="ManagerTools" <?php echo(hideContent(3)); ?>>
             <h2>Manager Tools</h2>
 
@@ -95,6 +96,7 @@
         
             <button type="button" onclick="showNewForm()">Add New Product</button>
 
+            <!-- New Product Form -->
             <form id="NewProductForm" hidden action="addproduct.php" method="post" enctype="multipart/form-data">
                 <fieldset>
                     <legend><h3>Add New Product:</h3></legend>
@@ -146,7 +148,7 @@
 
         </aside>
 
-        <!-- Products -->
+        <!-- Products Section -->
         <section id="Products" style="width: <?php echo(getProductsWidth()); ?>;">
             <?php include("Widgets/SearchBar.php"); ?>
 

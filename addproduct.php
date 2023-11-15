@@ -1,7 +1,20 @@
 <?php
     include("Scripts/DBConnect.php");
 
+    // if not logged in or product manager permission,
+    // redirect to index.php
+    if(isset($_SESSION['UserID'])){
+        if(!in_array(3, $_SESSION['UserPermissions'])) {
+            header("location: index.php");
+        }
+    }
+    else {
+        header("location: index.php");
+    }
+
     if($_SERVER['REQUEST_METHOD'] == "POST"){
+        // Post when coming from viewproducts.php
+
         $message;
 
         $ProductName = $_POST['ProductName'];
@@ -83,5 +96,8 @@
         }
 
         header("location: viewproducts.php?UploadStatus=$message&SearchText=$ProductName");
+    }
+    else {
+        header("location: viewproducts.php");
     }
 ?>
