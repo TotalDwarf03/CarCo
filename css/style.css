@@ -88,7 +88,9 @@ main.content {
 }
 
 /* viewproducts.php */
-
+.edit button {
+    font-size: 32px;
+}
 
 
 /* Navigation */

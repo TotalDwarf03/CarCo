@@ -27,6 +27,7 @@
     $ResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
 
     $sqlProducts = "SELECT 
+                        sp.SystemProductID,
                         sp.ProductName,
                         sp.Image,
                         sp.Description,
@@ -41,9 +42,9 @@
                         sp.ProductName
                     $ResultLimit";
     
-    // Get data for New Product Form Drop Downs
     $Products = mysqli_query($db, $sqlProducts);
-
+    
+    // Get data for New Product Form Drop Downs
     $sqlProdStatus = "  SELECT
                             sps.ProductStatusID,
                             sps.Status
@@ -73,6 +74,10 @@
     function UnConfirmNewProduct(){
         document.getElementById("submit").disabled = true;
         document.getElementById("ConfirmProduct").disabled = false;
+    }
+
+    function editProduct(ProductID){
+        window.location.replace(`editproduct.php?ProductID=${ProductID}`);
     }
 </script>
 
@@ -118,15 +123,13 @@
                     <select id="Status" name="Status">
                         <optgroup label="Product Status:">
                             <?php
-                                if($ProductStatus->num_rows>0){
-                                    while($row = mysqli_fetch_assoc($ProductStatus)){
-                                        $ProductStatusID = $row['ProductStatusID'];
-                                        $Status = $row['Status'];
+                                while($row = mysqli_fetch_assoc($ProductStatus)){
+                                    $ProductStatusID = $row['ProductStatusID'];
+                                    $Status = $row['Status'];
 
-                                        echo("
-                                                <option value='$ProductStatusID'>$Status</option>
-                                            ");
-                                    }
+                                    echo("
+                                            <option value='$ProductStatusID'>$Status</option>
+                                        ");
                                 }
                             ?>
                         </optgroup>
@@ -173,6 +176,7 @@
                     <?php 
                         if($Products->num_rows>0){
                             while($row = mysqli_fetch_assoc($Products)) {
+                                $ProductID = $row['SystemProductID'];
                                 $Product = $row['ProductName'];
                                 $Desc = $row['Description'];
                                 $Img = $row['Image'] ?? '';
@@ -190,7 +194,7 @@
                                             <td><img src='$Img' alt='Product Image' $imgSize onclick='maximiseImage()'></td>
                                             <td>£$Cost</td>
                                             <td $stockHighlight>$Status</td>
-                                            <td class='edit' $permissionCheck>&#128393;</td>
+                                            <td class='edit' $permissionCheck><button type=button onclick='editProduct($ProductID)'>&#128393;</button></td>
                                         </tr>
                                     ");
                             }
