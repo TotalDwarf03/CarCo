@@ -25,7 +25,7 @@
             <img 
                 src="<?php echo $_SESSION['Image'] ?>" 
                 alt="User Profile Image" 
-                <?php echo(isset($_SESSION['Image']) ? ScaleImage(300, $_SESSION['Image']) : ''); ?>
+                <?php echo(isset($_SESSION['Image']) ? ScaleImage(280, $_SESSION['Image']) : ''); ?>
             >
             <br>
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
