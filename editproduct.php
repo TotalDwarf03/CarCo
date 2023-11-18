@@ -60,7 +60,9 @@
                 }
                 else {
                     if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
-                        // 4. Change Image Value in DB
+                        // 4. Remove Old Image and Change Image Value in DB
+                        unlink($Image);
+
                         $sql = "UPDATE tblSystemProduct sp
                                 SET sp.Image = '$target'
                                 WHERE sp.SystemProductID = $ProductID
