@@ -14,6 +14,12 @@ header.navbar {
     text-align: center;
 }
 
+#SiteLogo {
+    float: left;
+    padding: 0 10px 0 10px;
+    color: white;
+}
+
 footer {
     height: 100px;
     width: 100%;
@@ -81,18 +87,6 @@ main.content {
     border-bottom: solid 2px black;
 }
 
-#SiteLogo {
-    float: left;
-    padding: 0 10px 0 10px;
-    color: white;
-}
-
-/* viewproducts.php */
-.edit button {
-    font-size: 32px;
-}
-
-
 /* Navigation */
 
 /* Main Nav */
@@ -154,9 +148,14 @@ td.edit, td.delete {
     font-size: 32px;
 }
 
-td.edit:hover, td.delete:hover {
-    background-color: lightgray;
+/* edit and delete table buttons */
+.edit button, .delete button {
+    font-size: 32px;
 }
+
+/* td.edit:hover, td.delete:hover {
+    background-color: lightgray;
+} */
 
 tfoot {
     text-align: center;

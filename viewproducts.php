@@ -1,8 +1,8 @@
 <?php 
     session_start(); 
 
-    include('Scripts/GeneralScripts.php');
     include('Scripts/DBConnect.php');
+    include('Scripts/GeneralScripts.php');
 
     function getProductsWidth() {
         // If logged in and have product manager permission (id=3),
@@ -24,7 +24,7 @@
     // Get Data for Main Products Table
     $SearchText = $_GET['SearchText'] ?? '';
     $ResultLimit = $_GET['ResultLimit'] ?? 10;
-    $ResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
+    $sqlResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
 
     $sqlProducts = "SELECT 
                         sp.SystemProductID,
@@ -40,7 +40,7 @@
                         OR sp.Description LIKE '%$SearchText%'
                     ORDER BY 
                         sp.ProductName
-                    $ResultLimit";
+                    $sqlResultLimit";
     
     $Products = mysqli_query($db, $sqlProducts);
     
@@ -191,7 +191,7 @@
                                         <tr>
                                             <td>$Product</td>
                                             <td>$Desc</td>
-                                            <td><img src='$Img' alt='Product Image' $imgSize onclick='maximiseImage()'></td>
+                                            <td><img src='$Img' alt='Product Image' $imgSize></td>
                                             <td>£$Cost</td>
                                             <td $stockHighlight>$Status</td>
                                             <td class='edit' $permissionCheck><button type=button onclick='editProduct($ProductID)'>&#128393;</button></td>
