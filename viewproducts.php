@@ -66,14 +66,14 @@
         }
     }
 
-    function ConfirmNewProduct(){
+    function ConfirmNew(){
         document.getElementById("submit").disabled = false;
-        document.getElementById("ConfirmProduct").disabled = true;
+        document.getElementById("Confirm").disabled = true;
     }
 
-    function UnConfirmNewProduct(){
+    function UnConfirmNew(){
         document.getElementById("submit").disabled = true;
-        document.getElementById("ConfirmProduct").disabled = false;
+        document.getElementById("Confirm").disabled = false;
     }
 
     function editProduct(ProductID){
@@ -103,21 +103,18 @@
 
             <!-- New Product Form -->
             <form id="NewProductForm" hidden action="addproduct.php" method="post" enctype="multipart/form-data">
-                <fieldset>
+                <fieldset class="inputs">
                     <legend><h3>Add New Product:</h3></legend>
 
                     <!-- Product Name -->
                     <label for="ProductName">Product: </label>
                     <input type="text" id="ProductName" name="ProductName" required maxlength="40">
-                    <br>
                     <!-- Product Description -->
                     <label for="Description">Description: </label>
                     <input type="text" id="Description" name="Description" required maxlength="255">
-                    <br>
                     <!-- Cost -->
                     <label for="Cost">Cost: </label>
                     <input type="number" id="Cost" name="Cost" min="0" max="999.99" step="0.01" required>
-                    <br>
                     <!-- Product Status -->
                     <label for="Status">Product Status: </label>
                     <select id="Status" name="Status">
@@ -134,18 +131,17 @@
                             ?>
                         </optgroup>
                     </select>
-                    <br>
                     <!-- Image -->
                     <label for="fileToUpload">Image: </label>
-                    <input type="file" id="fileToUpload" name="fileToUpload" required>
-                    <br>
-                    <hr>
+                    <input type="file" id="fileToUpload" name="fileToUpload" required>                    
+                </fieldset>
+                <fieldset>
                     <!-- confirm -->
-                    <input type="button" id="ConfirmProduct" name="ConfirmProduct" value="Confirm" onclick="ConfirmNewProduct()">
+                    <input type="button" id="Confirm" name="Confirm" value="Confirm" onclick="ConfirmNew()">
                     <!-- Submit -->
                     <input type="submit" id="submit" name="submit" value="Submit" disabled>
                     <!-- reset -->
-                    <input type="reset" id="reset" name="reset" value="Clear" onclick="UnConfirmNewProduct()" style="float: right;">
+                    <input type="reset" id="reset" name="reset" value="Clear" onclick="UnConfirmNew()" style="float: right;">
                 </fieldset>
             </form>
 

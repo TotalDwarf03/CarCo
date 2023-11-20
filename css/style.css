@@ -38,6 +38,8 @@ main.content {
     background-color: white;
 
     padding: 10px 0 10px 0;
+
+    overflow: auto;
 }
 
 .message {
@@ -160,4 +162,13 @@ td.edit, td.delete {
 tfoot {
     text-align: center;
     background-color: lightgray;
+}
+
+/* Forms */
+.inputs {
+    margin-bottom: 5px;
+}
+
+.inputs label, .inputs input {
+    display: block;
 }
