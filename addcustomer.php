@@ -1,4 +1,6 @@
 <?php
+    session_start();
+
     include("Scripts/DBConnect.php");
 
     // if not logged in or product manager permission,
@@ -47,56 +49,60 @@
                     )";
         
         if(mysqli_query($db, $sql)){
-            // 2. Once Inserted, Get the CustomerID so Image can be recorded and Uploaded
-            $sql = "SELECT c.CustomerID
-                    FROM tblCustomer c
-                    WHERE c.CustomerName = '$Name'
-                        AND c.Postcode = '$Postcode'
-                        AND c.Telephone = '$Telephone'
-                    LIMIT 1";
-            
-            $result = mysqli_query($db, $sql);
+            if($_FILES['fileToUpload']['name'] != ''){
+                // 2. Once Inserted, Get the CustomerID so Image can be recorded and Uploaded
+                $sql = "SELECT c.CustomerID
+                FROM tblCustomer c
+                WHERE c.CustomerName = '$Name'
+                    AND c.Postcode = '$Postcode'
+                    AND c.Telephone = '$Telephone'
+                LIMIT 1";
+        
+                $result = mysqli_query($db, $sql);
 
-            if($result != false){
-                $CustomerID = mysqli_fetch_assoc($result)['CustomerID'];
-                mysqli_free_result($result);
+                if($result != false){
+                    $CustomerID = mysqli_fetch_assoc($result)['CustomerID'];
+                    mysqli_free_result($result);
 
-                // 3. Upload Image in File Structure (Images/Product/)
-                $UploadOk = true;
+                    // 3. Upload Image in File Structure (Images/Product/)
+                    $UploadOk = true;
 
-                $dir = "Images/Customers/";
-                $imgFileType = pathinfo(basename($_FILES['fileToUpload']['name']), PATHINFO_EXTENSION);
-                $target = $dir.$CustomerID.'.'.$imgFileType;
+                    $dir = "Images/Customers/";
+                    $imgFileType = pathinfo(basename($_FILES['fileToUpload']['name']), PATHINFO_EXTENSION);
+                    $target = $dir.$CustomerID.'.'.$imgFileType;
 
-                // If Uploaded Image not real image, flag it
-                if(getimagesize($_FILES['fileToUpload']['tmp_name']) == false){
-                    $UploadOk = false;
-                }
+                    // If Uploaded Image not real image, flag it
+                    if(getimagesize($_FILES['fileToUpload']['tmp_name']) == false){
+                        $UploadOk = false;
+                    }
 
-                if(!$UploadOk){
-                    $message = 'Error Uploading Image, Please Edit the Record and Try Again.';
-                }
-                else {
-                    if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
-                        // 4. Change Image Value in DB
-                        $sql = "UPDATE tblCustomer c
-                                SET c.Image = '$target'
-                                WHERE c.CustomerID = $CustomerID
-                                LIMIT 1";
-
-                        $result = mysqli_query($db, $sql);
-
-                        $message = "Upload Complete";
+                    if(!$UploadOk){
+                        $message = 'Error Uploading Image, Please Edit the Record and Try Again.';
                     }
                     else {
-                        $message = "Error Uploading Image, Please Edit the Record and Try Again.";
+                        if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
+                            // 4. Change Image Value in DB
+                            $sql = "UPDATE tblCustomer c
+                                    SET c.Image = '$target'
+                                    WHERE c.CustomerID = $CustomerID
+                                    LIMIT 1";
+
+                            $result = mysqli_query($db, $sql);
+
+                            $message = "Upload Complete";
+                        }
+                        else {
+                            $message = "Error Uploading Image, Please Edit the Record and Try Again.";
+                        }
                     }
                 }
-            }
-            else{
-                $message = "Error Getting Product ID";
-            }
-            
+                else{
+                    $message = "Error Getting Product ID";
+                }
+            }  
+            else {
+                $message = "Upload Complete. Please Edit the Record if you'd like to Add an Image.";
+            }          
         }
         else {
             $message = "Error Inserting into DB";

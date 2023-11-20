@@ -1,4 +1,6 @@
 <?php
+    session_start();
+    
     include("Scripts/DBConnect.php");
 
     // if not logged in or product manager permission,
