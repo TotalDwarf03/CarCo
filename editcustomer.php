@@ -240,6 +240,8 @@
         <section id="CustomerLogins" style="width: 80%; float:right;">
             <h3>Customer Logins</h3>
 
+            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
+
             <table>
                 <thead>
                     <tr>

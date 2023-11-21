@@ -37,23 +37,26 @@
 ?>
 
 <script>
-    function showNewForm(){
-        NewCustomerForm = document.getElementById("NewCustomerForm")
+    function toggleNewForm(){
+        NewCustomerForm = document.getElementById("NewCustomerForm");
+        NewCustomerButton = document.getElementById("NewCustomerButton");
 
         if(NewCustomerForm.hidden){
             NewCustomerForm.hidden = false;
+            NewCustomerButton.disabled = true;
         }
         else{
             NewCustomerForm.hidden = true;
+            NewCustomerButton.disabled = false;
         }
     }
 
-    function Confirm(){
+    function ConfirmNew(){
         document.getElementById("submit").disabled = false;
         document.getElementById("Confirm").disabled = true;
     }
 
-    function UnConfirm(){
+    function UnConfirmNew(){
         document.getElementById("submit").disabled = true;
         document.getElementById("Confirm").disabled = false;
     }
@@ -80,7 +83,7 @@
 
             <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
 
-            <button type="button" onclick="showNewForm()">Add New Customer</button>
+            <button type="button" id="NewCustomerButton" onclick="toggleNewForm()">Add New Customer</button>
 
             <!-- New Customer Form -->
             <form id="NewCustomerForm" hidden action="addCustomer.php" method="post" enctype="multipart/form-data">
@@ -111,11 +114,11 @@
                 </fieldset>
                 <fieldset>
                     <!-- confirm -->
-                    <input type="button" id="Confirm" name="Confirm" value="Confirm" onclick="Confirm()">
+                    <input type="button" id="Confirm" name="Confirm" value="Confirm" onclick="ConfirmNew()">
                     <!-- Submit -->
                     <input type="submit" id="submit" name="submit" value="Submit" disabled>
                     <!-- reset -->
-                    <input type="reset" id="reset" name="reset" value="Clear" onclick="UnConfirm()" style="float: right;">
+                    <input type="reset" id="reset" name="reset" value="Cancel" onclick="UnConfirmNew(); toggleNewForm()" style="float: right;">
                 </fieldset>
             </form>
 
