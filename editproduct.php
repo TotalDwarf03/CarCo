@@ -92,6 +92,7 @@
 
         $ProductID = $_GET['ProductID'];
 
+        // Get Product Statuses for drop down
         $sqlProdStatus = "  SELECT
                                 sps.ProductStatusID,
                                 sps.Status
@@ -100,6 +101,7 @@
 
         $ProductStatuses = mysqli_query($db, $sqlProdStatus);
 
+        // Get Product Information
         $sqlProductInfo = " SELECT 
                                 sp.SystemProductID,
                                 sp.ProductName,

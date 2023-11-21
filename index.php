@@ -30,12 +30,18 @@
             <br>
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
 
-            <?php 
-                if($_SESSION['UserType'] == 'Staff'){
-                    include("Widgets/UploadForm.php");
-                }
-            ?>
+            <!-- Image Upload Form (hidden if not staff) -->
+            <form action="Scripts/UploadPhoto.php" method="post" enctype="multipart/form-data" <?php echo($_SESSION['UserType'] != 'Staff' ? 'hidden' : ''); ?>>
+                <fieldset>
+                    <legend>Update Image:</legend>
+
+                    <input type="file" id="fileToUpload" name="fileToUpload" required>
+                    <input type="hidden" id="PageName" name="PageName" value="<?php echo(basename($_SERVER['PHP_SELF'])) ?>">
+                    <input type="submit" value="Confirm" name="submit">
+                </fieldset>
+            </form>
             
+            <!-- Error / Success Message -->
             <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>>
                 <?php echo($_GET['UploadStatus'] ?? ''); ?>
             </p>

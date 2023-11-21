@@ -61,6 +61,9 @@
     }
 
     function getUserPerms($user){
+        // If Logged in as Staff,
+        // Get permissions from tblStaffPermissions and push into an array
+
         if($user['UserType'] == 'Staff') {
             include('Scripts/DBConnect.php');
 
@@ -89,6 +92,8 @@
     }
 
     function login($user, $userPermissions){
+        // Set Session Variables
+
         $_SESSION['UserID'] = $user['UserID'];
         $_SESSION['Username'] = $user['Username'];
         $_SESSION['UserType'] = $user['UserType'];
@@ -110,6 +115,8 @@
       
         if($user){
             if(password_verify($password, $user['Password'])){
+                // If Password Correct, get user perms and setup session variables
+
                 $userPermissions = getUserPerms($user);
                 login($user, $userPermissions);
                 header("location: index.php");

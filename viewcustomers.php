@@ -20,6 +20,7 @@
     $ResultLimit = $_GET['ResultLimit'] ?? 10;
     $sqlResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
 
+    // Get List of Customers
     $sqlCustomers = "   SELECT
                             c.CustomerID,
                             c.CustomerName,
@@ -81,6 +82,7 @@
         <aside class="ManagerTools">
             <h2>Manager Tools</h2>
 
+            <!-- Error / Success Message -->
             <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
 
             <button type="button" id="NewCustomerButton" onclick="toggleNewForm()">Add New Customer</button>

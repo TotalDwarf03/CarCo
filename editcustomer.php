@@ -96,6 +96,8 @@
 
         $CustomerID = $_GET['CustomerID'];
 
+        // If DeleteID given through GET,
+        // Delete the Login Record with the ID
         if(isset($_GET['DeleteID'])){
             $deleteID = $_GET['DeleteID'];
 
@@ -240,8 +242,10 @@
         <section id="CustomerLogins" style="width: 80%; float:right;">
             <h3>Customer Logins</h3>
 
+            <!-- Error / Success Message -->
             <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
 
+            <!-- Table to Display Current Logins -->
             <table>
                 <thead>
                     <tr>
@@ -292,6 +296,7 @@
 
             <button type="button" id="AddLogin" onclick="ToggleNewLogin()">Add Login</button>
 
+            <!-- New Login Form -->
             <table id="NewCustomerLoginTable" hidden>
                 <form id="NewCustomerLogin" action="addcustomerlogin.php" method="post">
                     

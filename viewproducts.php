@@ -100,6 +100,7 @@
         <aside class="ManagerTools" <?php echo(hideContent(3)); ?>>
             <h2>Manager Tools</h2>
 
+            <!-- Error / Success Message -->
             <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
         
             <button type="button" id="NewProductButton" onclick="toggleNewForm()">Add New Product</button>
@@ -165,8 +166,6 @@
                         <th>Image</th>
                         <th>Cost</th>
                         <th>Status</th>
-
-                        <!-- Edit and Delete -->
                         <th <?php echo(hideContent(3)); ?>>Edit</th>
                     </tr>
                 </thead>
