@@ -150,14 +150,10 @@ td.edit, td.delete {
     font-size: 32px;
 }
 
-/* edit and delete table buttons */
-.edit button, .delete button {
+/* edit, delete and add table buttons */
+.edit button, .delete button, .add {
     font-size: 32px;
 }
-
-/* td.edit:hover, td.delete:hover {
-    background-color: lightgray;
-} */
 
 tfoot {
     text-align: center;

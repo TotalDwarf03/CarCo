@@ -115,16 +115,16 @@
                                 sp.ProductName
                             LIMIT 1";
     
-    $result = mysqli_query($db, $sqlProductInfo);
-    $ProductInfo = mysqli_fetch_assoc($result);
-    mysqli_free_result($result);
+        $result = mysqli_query($db, $sqlProductInfo);
+        $ProductInfo = mysqli_fetch_assoc($result);
+        mysqli_free_result($result);
 
-    // Get Values for Form
-    $ProductName = $ProductInfo['ProductName'];
-    $Image = $ProductInfo['Image'];
-    $Description = $ProductInfo['Description'];
-    $CostPerUnit = $ProductInfo['CostPerUnit'];
-    $ProductStatus = $ProductInfo['Status'];
+        // Get Values for Form
+        $ProductName = $ProductInfo['ProductName'];
+        $Image = $ProductInfo['Image'];
+        $Description = $ProductInfo['Description'];
+        $CostPerUnit = $ProductInfo['CostPerUnit'];
+        $ProductStatus = $ProductInfo['Status'];
 
     }
     else {
@@ -157,7 +157,7 @@
 
     <main class="content">
         <form id="EditProductForm" method="post" action="editproduct.php" enctype="multipart/form-data">
-        <fieldset>
+        <fieldset class="inputs">
             <legend><h3>Edit Product:</h3></legend>
 
             <!-- Product ID (Hidden) -->
@@ -165,16 +165,12 @@
             <!-- Product Name -->
             <label for="ProductName">Product: </label>
             <input type="text" id="ProductName" name="ProductName" required maxlength="40" value="<?php echo($ProductName); ?>">
-            <br>
             <!-- Product Description -->
             <label for="Description">Description: </label>
-            <br>
             <textarea id="Description" name="Description" form="EditProductForm" required maxlength="255"><?php echo($Description); ?></textarea>
-            <br>
             <!-- Cost -->
             <label for="Cost">Cost: </label>
             <input type="number" id="Cost" name="Cost" min="0" max="999.99" step="0.01" required value="<?php echo($CostPerUnit); ?>">
-            <br>
             <!-- Product Status -->
             <label for="Status">Product Status: </label>
             <select id="Status" name="Status">
@@ -192,17 +188,16 @@
                     ?>
                 </optgroup>
             </select>
-            <br>
             <!-- Image -->
             <label for="fileToUpload">Image: </label>
             <input type="file" id="fileToUpload" name="fileToUpload">
-            <br>
             <!-- Preview of Current Image and Hidden Input with old path -->
             <h4>Current Image:</h4>
             <img src="<?php echo($Image); ?>" <?php echo(ScaleImage(150, $Image)); ?>>
             <input type="hidden" id="Image" name="Image" value="<?php echo($Image); ?>">
-            <br>
             <hr>
+        </fieldset>
+        <fieldset>
             <!-- confirm -->
             <input type="button" id="ConfirmProduct" name="ConfirmProduct" value="Confirm" onclick="ConfirmChanges()">
             <!-- Submit -->

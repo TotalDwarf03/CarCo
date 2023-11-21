@@ -66,12 +66,12 @@
         }
     }
 
-    function ConfirmNew(){
+    function Confirm(){
         document.getElementById("submit").disabled = false;
         document.getElementById("Confirm").disabled = true;
     }
 
-    function UnConfirmNew(){
+    function UnConfirm(){
         document.getElementById("submit").disabled = true;
         document.getElementById("Confirm").disabled = false;
     }
@@ -137,11 +137,11 @@
                 </fieldset>
                 <fieldset>
                     <!-- confirm -->
-                    <input type="button" id="Confirm" name="Confirm" value="Confirm" onclick="ConfirmNew()">
+                    <input type="button" id="Confirm" name="Confirm" value="Confirm" onclick="Confirm()">
                     <!-- Submit -->
                     <input type="submit" id="submit" name="submit" value="Submit" disabled>
                     <!-- reset -->
-                    <input type="reset" id="reset" name="reset" value="Clear" onclick="UnConfirmNew()" style="float: right;">
+                    <input type="reset" id="reset" name="reset" value="Clear" onclick="UnConfirm()" style="float: right;">
                 </fieldset>
             </form>
 
