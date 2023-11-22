@@ -6,52 +6,59 @@
     if(isset($_SESSION['UserID'])){
         // If Logged in
 
-        $message;
+        if($_SERVER['REQUEST_METHOD'] == "POST"){
+            // If Post
 
-        // 1. Get StaffID from session variables and posted values
-        $StaffID = $_SESSION['UserID'];
-        $OldImage = $_POST['OldImage'];
+            $message;
 
-        // 1. Upload Image in File Structure (Images/Staff/)
-        $UploadOk = true;
+            // 1. Get StaffID from session variables and posted values
+            $StaffID = $_SESSION['UserID'];
+            $OldImage = $_POST['OldImage'];
 
-        $dir = "Images/Staff/";
-        $imgFileType = pathinfo(basename($_FILES['fileToUpload']['name']), PATHINFO_EXTENSION);
-        $target = $dir.$StaffID.'.'.$imgFileType;
+            // 1. Upload Image in File Structure (Images/Staff/)
+            $UploadOk = true;
 
-        // If Uploaded Image not real image, flag it
-        if(getimagesize($_FILES['fileToUpload']['tmp_name']) == false){
-            $UploadOk = false;
-        }
+            $dir = "Images/Staff/";
+            $imgFileType = pathinfo(basename($_FILES['fileToUpload']['name']), PATHINFO_EXTENSION);
+            $target = $dir.$StaffID.'.'.$imgFileType;
 
-        if(!$UploadOk){
-            $message = 'Error Uploading Image, Please Edit the Record and Try Again.';
-        }
-        else {
-            if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
-                // 2. Remove Old Image and Change Image Value in DB
-                if($OldImage != $target){
-                    unlink($OldImage);
-                }
+            // If Uploaded Image not real image, flag it
+            if(getimagesize($_FILES['fileToUpload']['tmp_name']) == false){
+                $UploadOk = false;
+            }
 
-                $sql = "UPDATE tblStaff s
-                        SET s.Image = '$target'
-                        WHERE s.StaffID = $StaffID
-                        LIMIT 1";
-
-                $result = mysqli_query($db, $sql);
-
-                // 3. Update Session Variable
-                $_SESSION['Image'] = $target;
-
-                $message = "Record Updated";
+            if(!$UploadOk){
+                $message = 'Error Uploading Image, Please Edit the Record and Try Again.';
             }
             else {
-                $message = "Error Uploading Image, Please Try Again.";
-            }
-        }
+                if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
+                    // 2. Remove Old Image and Change Image Value in DB
+                    if($OldImage != $target){
+                        unlink($OldImage);
+                    }
 
-        header("location: index.php?UploadStatus=$message");
+                    $sql = "UPDATE tblStaff s
+                            SET s.Image = '$target'
+                            WHERE s.StaffID = $StaffID
+                            LIMIT 1";
+
+                    $result = mysqli_query($db, $sql);
+
+                    // 3. Update Session Variable
+                    $_SESSION['Image'] = $target;
+
+                    $message = "Record Updated";
+                }
+                else {
+                    $message = "Error Uploading Image, Please Try Again.";
+                }
+            }
+
+            header("location: index.php?UploadStatus=$message");
+        }
+        else {
+            header("location: index.php");
+        }
     }
     else {
         header("location: index.php");

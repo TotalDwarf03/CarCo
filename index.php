@@ -4,6 +4,12 @@
     include('Scripts/GeneralScripts.php');
 ?>
 
+<script>
+    function ChangePassword(){
+        window.location.replace("updatepassword.php");
+    }
+</script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +37,7 @@
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
 
             <!-- Image Upload Form (hidden if not staff) -->
-            <form action="updatestaffimage.php" method="post" enctype="multipart/form-data" <?php echo($_SESSION['UserType'] != 'Staff' ? 'hidden' : ''); ?>>
+            <form id="UploadStaffImage" action="updatestaffimage.php" method="post" enctype="multipart/form-data" <?php echo($_SESSION['UserType'] != 'Staff' ? 'hidden' : ''); ?>>
                 <fieldset>
                     <legend>Update Image:</legend>
 
@@ -40,11 +46,12 @@
                     <input type="submit" value="Confirm" name="submit">
                 </fieldset>
             </form>
+
+            <button type="button" id="ChangePassword" name="ChangePassword" onclick="ChangePassword();">Change Password</button>
             
             <!-- Error / Success Message -->
-            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>>
-                <?php echo($_GET['UploadStatus'] ?? ''); ?>
-            </p>
+            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? ''); ?></p>
+
         </section>
 
         <!-- Homepage Conent -->
