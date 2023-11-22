@@ -31,12 +31,12 @@
             <h3>Welcome <?php echo $_SESSION['Name']; ?>!</h3>
 
             <!-- Image Upload Form (hidden if not staff) -->
-            <form action="Scripts/UploadPhoto.php" method="post" enctype="multipart/form-data" <?php echo($_SESSION['UserType'] != 'Staff' ? 'hidden' : ''); ?>>
+            <form action="updatestaffimage.php" method="post" enctype="multipart/form-data" <?php echo($_SESSION['UserType'] != 'Staff' ? 'hidden' : ''); ?>>
                 <fieldset>
                     <legend>Update Image:</legend>
 
                     <input type="file" id="fileToUpload" name="fileToUpload" required>
-                    <input type="hidden" id="PageName" name="PageName" value="<?php echo(basename($_SERVER['PHP_SELF'])) ?>">
+                    <input type="hidden" id="OldImage" name="OldImage" value="<?php echo($_SESSION['Image']) ?>">
                     <input type="submit" value="Confirm" name="submit">
                 </fieldset>
             </form>
