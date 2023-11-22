@@ -30,7 +30,9 @@
         else {
             if(move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $target)){
                 // 2. Remove Old Image and Change Image Value in DB
-                unlink($OldImage);
+                if($OldImage != $target){
+                    unlink($OldImage);
+                }
 
                 $sql = "UPDATE tblStaff s
                         SET s.Image = '$target'
