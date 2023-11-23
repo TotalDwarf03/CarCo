@@ -1,19 +1,10 @@
 <?php 
     session_start(); 
 
-    include('Scripts/DBConnect.php');
-    include('Scripts/GeneralScripts.php');
+    require_once('Scripts/DBConnect.php');
+    require_once("Scripts/GeneralScripts.php");
 
-    // if not logged in or customer manager permission,
-    // redirect to index.php
-    if(isset($_SESSION['UserID'])){
-        if(!in_array(4, $_SESSION['UserPermissions'])) {
-            header("location: index.php");
-        }
-    }
-    else {
-        header("location: index.php");
-    }
+    checkLoginPermissions(4);
 
     // Search Variables
     $SearchText = $_GET['SearchText'] ?? '';

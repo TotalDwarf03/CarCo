@@ -2,15 +2,9 @@
     session_start();
 
     include('Scripts/DBConnect.php');
+    require_once("Scripts/GeneralScripts.php");
 
-    if(isset($_SESSION['UserID'])){
-        if(!in_array(4, $_SESSION['UserPermissions'])) {
-            header("location: index.php");
-        }
-    }
-    else {
-        header("location: index.php");
-    }
+    checkLoginPermissions(4);
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         $message;

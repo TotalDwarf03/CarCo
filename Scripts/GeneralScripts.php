@@ -35,4 +35,17 @@
             return "style='display:none;'";
         }
     }
+
+    function checkLoginPermissions(int $PermissionID){
+        // if not logged in or no permission,
+        // redirect to index.php
+        if(isset($_SESSION['UserID'])){
+            if(!in_array($PermissionID, $_SESSION['UserPermissions'])) {
+                header("location: index.php");
+            }
+        }
+        else {
+            header("location: index.php");
+        }
+    }
 ?>

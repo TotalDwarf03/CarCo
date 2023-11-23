@@ -1,8 +1,8 @@
 <?php 
     session_start(); 
 
-    include('Scripts/DBConnect.php');
-    include('Scripts/GeneralScripts.php');
+    require_once('Scripts/DBConnect.php');
+    require_once('Scripts/GeneralScripts.php');
 
     function getProductsWidth() {
         // If logged in and have product manager permission (id=3),

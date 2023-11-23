@@ -1,5 +1,5 @@
 <?php
-    include("DBCredentials.php");
+    require_once("DBCredentials.php");
 
     $db = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
 

@@ -2,17 +2,9 @@
     session_start();
     
     include("Scripts/DBConnect.php");
+    require_once("Scripts/GeneralScripts.php");
 
-    // if not logged in or product manager permission,
-    // redirect to index.php
-    if(isset($_SESSION['UserID'])){
-        if(!in_array(3, $_SESSION['UserPermissions'])) {
-            header("location: index.php");
-        }
-    }
-    else {
-        header("location: index.php");
-    }
+    checkLoginPermissions(3);
 
     if($_SERVER['REQUEST_METHOD'] == "POST"){
         // Post when coming from viewproducts.php

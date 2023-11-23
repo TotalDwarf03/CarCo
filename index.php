@@ -1,7 +1,7 @@
 <?php 
     session_start(); 
 
-    include('Scripts/GeneralScripts.php');
+    require_once('Scripts/GeneralScripts.php');
 ?>
 
 <script>
