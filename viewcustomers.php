@@ -162,7 +162,11 @@
                             }
                         }
                         else {
-                            echo("No Results Found.");
+                            echo("
+                                    <tr>
+                                        <td colspan='7'>No Results Found.</td>
+                                    </tr>
+                                ");
                         }
                     ?>
                 </tbody>
