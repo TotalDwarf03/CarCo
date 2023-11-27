@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    include('Scripts/DBConnect.php');
+    require_once('Scripts/DBConnect.php');
     require_once("Scripts/GeneralScripts.php");
 
     checkLoginPermissions(4);

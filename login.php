@@ -6,7 +6,7 @@
     $loginStatus = '';
 
     function findUser(string $username, string $UserType){
-        require_once('Scripts/DBConnect.php');
+        require('Scripts/DBConnect.php');
 
         $StaffResult;
         $CustomerResult;
@@ -65,7 +65,7 @@
         // Get permissions from tblStaffPermissions and push into an array
 
         if($user['UserType'] == 'Staff') {
-            require_once('Scripts/DBConnect.php');
+            require('Scripts/DBConnect.php');
 
             $userID = $user['UserID'];
 
