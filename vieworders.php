@@ -52,6 +52,7 @@
                 ON o.StaffID = s.StaffID
             WHERE o.OrderID LIKE '%$SearchText%'
             $sqlCustomerLimit
+            ORDER BY o.CreationDate DESC
             $sqlResultLimit";
 
     $Orders = mysqli_query($db, $sql);
@@ -80,8 +81,8 @@
                 <tr>
                     <th>OrderID</th>
                     <th>CreationDate</th>
-                    <th>Customer Name</th>
-                    <th>Staff Name</th>
+                    <th>Customer</th>
+                    <th>Created By</th>
                     <th>Total Cost</th>
                     <th>Delivery Date</th>
                     <th <?php echo(hideContent(5)); ?>>Show More</th>
@@ -92,18 +93,28 @@
                 <?php 
                     if($Orders->num_rows>0){
                         while($row = mysqli_fetch_assoc($Orders)) {
-                            $permissionCheck = hideContent(3);
+                            $OrderID = $row['OrderID'];
+                            $CreationDate = $row['CreationDate'];
+                            $CustomerName = $row['CustomerName'];
+                            $StaffName = $row['StaffName'];
+                            $TotalCost = $row['TotalCost'];
+                            $DeliveryDate = $row['DeliveryDate'];
+
+                            $permissionCheck = hideContent(5);
 
                             echo("  
                                     <tr>
-                                        <td>$Product</td>
-                                        <td>$Desc</td>
-                                        <td><img src='$Img' alt='Product Image' $imgSize></td>
-                                        <td>£$Cost</td>
-                                        <td $stockHighlight>$Status</td>
-                                        <td class='edit' $permissionCheck><button type=button onclick='editProduct($ProductID)'>&#128393;</button></td>
+                                        <td>$OrderID</td>
+                                        <td>$CreationDate</td>
+                                        <td>$CustomerName</td>
+                                        <td>$StaffName</td>
+                                        <td>£$TotalCost</td>
+                                        <td>$DeliveryDate</td>
+                                        <td $permissionCheck></td>
                                     </tr>
                                 ");
+
+                            // Get Order Products
                         }
                     }
                     else {
