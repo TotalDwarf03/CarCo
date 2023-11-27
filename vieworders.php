@@ -38,26 +38,39 @@
     }
 
     // Get List of Orders
-    $sql = "SELECT
-                o.OrderID,
-                o.CreationDate,
-                c.CustomerName,
-                CONCAT(s.Forename, ' ', s.Surname) as StaffName,
-                o.TotalCost,
-                o.DeliveryDate
-            FROM tblOrder o
-            JOIN tblCustomer c
-                ON o.CustomerID = c.CustomerID
-            JOIN tblStaff s
-                ON o.StaffID = s.StaffID
-            WHERE o.OrderID LIKE '%$SearchText%'
-            $sqlCustomerLimit
-            ORDER BY o.CreationDate DESC
-            $sqlResultLimit";
+    $sqlOrders = "  SELECT
+                        o.OrderID,
+                        o.CreationDate,
+                        c.CustomerName,
+                        CONCAT(s.Forename, ' ', s.Surname) as StaffName,
+                        o.TotalCost,
+                        o.DeliveryDate
+                    FROM tblOrder o
+                    JOIN tblCustomer c
+                        ON o.CustomerID = c.CustomerID
+                    JOIN tblStaff s
+                        ON o.StaffID = s.StaffID
+                    WHERE o.OrderID LIKE '%$SearchText%'
+                    $sqlCustomerLimit
+                    ORDER BY o.CreationDate DESC
+                    $sqlResultLimit";
 
-    $Orders = mysqli_query($db, $sql);
+    $Orders = mysqli_query($db, $sqlOrders);
 
 ?>
+
+<script>
+    function showSubTable(OrderID){
+        SubTable = document.getElementById(`SubTable-${OrderID}`);
+
+        if(SubTable.hidden){
+            SubTable.hidden = false;
+        }
+        else{
+            SubTable.hidden = true;
+        }
+    }
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -71,68 +84,133 @@
     <?php include("Widgets/navigation.php") ?>
 
     <main class="content">
-        <?php include("Widgets/SearchBar.php"); ?>
+        <!-- Orders Section -->
+        <section id="Orders">
+            <?php include("Widgets/SearchBar.php"); ?>
 
-        <br>
+            <br>
 
-        <table>
-            <caption><h2>Orders</h2></caption>
-            <thead>
-                <tr>
-                    <th>OrderID</th>
-                    <th>CreationDate</th>
-                    <th>Customer</th>
-                    <th>Created By</th>
-                    <th>Total Cost</th>
-                    <th>Delivery Date</th>
-                    <th <?php echo(hideContent(5)); ?>>Show More</th>
-                </tr>
-            </thead>
+            <table>
+                <caption><h2>Orders</h2></caption>
+                <thead>
+                    <tr>
+                        <th>OrderID</th>
+                        <th>CreationDate</th>
+                        <th>Customer</th>
+                        <th>Created By</th>
+                        <th>Delivery Date</th>
+                        <th>Total Cost</th>
+                        <th>Show More</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                <?php 
-                    if($Orders->num_rows>0){
-                        while($row = mysqli_fetch_assoc($Orders)) {
-                            $OrderID = $row['OrderID'];
-                            $CreationDate = $row['CreationDate'];
-                            $CustomerName = $row['CustomerName'];
-                            $StaffName = $row['StaffName'];
-                            $TotalCost = $row['TotalCost'];
-                            $DeliveryDate = $row['DeliveryDate'];
+                <tbody>
+                    <?php 
+                        if($Orders->num_rows>0){
+                            while($row = mysqli_fetch_assoc($Orders)) {
+                                $OrderID = $row['OrderID'];
+                                $CreationDate = $row['CreationDate'];
+                                $CustomerName = $row['CustomerName'];
+                                $StaffName = $row['StaffName'];
+                                $DeliveryDate = $row['DeliveryDate'];
+                                $TotalCost = $row['TotalCost'];
 
-                            $permissionCheck = hideContent(5);
+                                $PermissionCheck = hideContent(5);
 
-                            echo("  
+                                echo("  
+                                        <tr>
+                                            <td>$OrderID</td>
+                                            <td>$CreationDate</td>
+                                            <td>$CustomerName</td>
+                                            <td>$StaffName</td>
+                                            <td>$DeliveryDate</td>
+                                            <td>£$TotalCost</td>
+                                            <td class='info'><button type='button' onclick='showSubTable($OrderID)'>&#9432;</button></td>
+                                            <td class='delete' $PermissionCheck><button type=button onclick='editOrder($OrderID)'>&#128393;</button></td>
+                                        </tr>
+                                    ");
+
+                                // Get Order Products
+                                $sqlOrderProducts = "   SELECT
+                                                            sp.ProductName,
+                                                            op.Quantity,
+                                                            sp.CostPerUnit,
+                                                            op.Subtotal
+                                                        FROM tblOrderProducts op
+                                                        JOIN tblSystemProduct sp
+                                                            ON op.SystemProductID = sp.SystemProductID
+                                                        WHERE op.OrderID = $OrderID";
+
+                                $OrderProducts = mysqli_query($db, $sqlOrderProducts);
+
+                                echo("
+                                        <tr id='SubTable-$OrderID' hidden>
+                                            <td></td>
+                                            <td colspan='7'>
+                                                <table class='SubTable'>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>Quantity</th>
+                                                            <th>Cost Per Unit</th>
+                                                            <th>Subtotal</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                    ");
+
+                                while($row2 = mysqli_fetch_assoc($OrderProducts)){
+                                    $ProductName = $row2['ProductName'];
+                                    $Quantity = $row2['Quantity'];
+                                    $CostPerUnit = $row2['CostPerUnit'];
+                                    $Subtotal = $row2['Subtotal'];
+
+                                    echo("
+                                            <tr>
+                                                <td>$ProductName</td>
+                                                <td>$Quantity</td>
+                                                <td>£$CostPerUnit</td>
+                                                <td>£$Subtotal</td>
+                                            </tr>
+                                        ");                                                    
+                                }
+
+                                echo("
+                                                    </tbody>
+
+                                                    <tfoot>
+                                                        <td colspan=3></td>
+                                                        <td><b>£$TotalCost</b></td>
+                                                    <tfood>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    ");
+                            }
+                        }
+                        else {
+                            echo("
                                     <tr>
-                                        <td>$OrderID</td>
-                                        <td>$CreationDate</td>
-                                        <td>$CustomerName</td>
-                                        <td>$StaffName</td>
-                                        <td>£$TotalCost</td>
-                                        <td>$DeliveryDate</td>
-                                        <td $permissionCheck></td>
+                                        <td colspan='8'>No Results Found.</td>
                                     </tr>
                                 ");
-
-                            // Get Order Products
                         }
-                    }
-                    else {
-                        echo("
-                                <tr>
-                                    <td colspan='7'>No Results Found.</td>
-                                </tr>
-                            ");
-                    }
-                ?>
-            </tbody>
+                    ?>
+                </tbody>
 
-            <tfoot>
-                <tr>
-                    <td colspan="7"><i><?php echo("$Orders->num_rows Results.") ?></i></td>
-                </tr>
-            </tfoot>
-        </table>
+                <tfoot>
+                    <tr>
+                        <td colspan="8"><i><?php echo("$Orders->num_rows Results.") ?></i></td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <br>
+        
+            <button type="button" id="NewOrderButton">Add New Order</button>
+        </section>
     </main>
 
     <?php include("Widgets/footer.php"); ?>

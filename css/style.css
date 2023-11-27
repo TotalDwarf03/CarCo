@@ -89,6 +89,12 @@ main.content {
     border-bottom: solid 2px black;
 }
 
+/* vieworders.php */
+
+#NewOrderButton {
+    font-size: 24px;
+}
+
 /* Navigation */
 
 /* Main Nav */
@@ -150,8 +156,12 @@ td.edit, td.delete {
     font-size: 32px;
 }
 
+.SubTable {
+    border: dashed 2px black;
+}
+
 /* edit, delete and add table buttons */
-.edit button, .delete button, .add {
+.edit button, .delete button, .info button {
     font-size: 32px;
 }
 
