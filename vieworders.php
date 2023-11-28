@@ -4,20 +4,43 @@
     require_once("Scripts/DBConnect.php");
     require_once('Scripts/GeneralScripts.php');
 
-    if(!isset($_SESSION['UserID'])){
-        // If not logged in, return to index.php
+    // If logged in as staff, must have permissions
+    // If logged in as customer fine
+    if(isset($_SESSION['UserID'])){
+        if($_SESSION['UserType'] == "Staff"){
+            // If Staff, Check Perms
+            checkLoginPermissions(5);
+        }
+    }
+    else{
+        // If not logged in, redirect to index.php
         header("location: index.php");
     }
-
-    // Array Structure (Add Or Edit):
-    //
-    // $Order = [$Product1, $Product2, ...]
-    // $Product1 = [ProductID, QTY, Cost]
 
     // Search Variables
     $SearchText = $_GET['SearchText'] ?? '';
     $ResultLimit = $_GET['ResultLimit'] ?? 10;
     $sqlResultLimit = ($ResultLimit == -1) ? "" : "LIMIT $ResultLimit";
+
+    if($_SERVER['REQUEST_METHOD'] == "GET"){
+        if($_SESSION['UserType'] == "Staff"){
+            // Delete Order if DeleteID Given
+            if(isset($_GET['DeleteID'])){
+                $DeleteID = $_GET['DeleteID'];
+            
+                $sqlDelete = "  DELETE FROM tblOrderProducts
+                                WHERE OrderID = $DeleteID";
+
+                mysqli_query($db, $sqlDelete);
+
+                $sqlDelete = "  DELETE FROM tblOrder
+                                WHERE OrderID = $DeleteID
+                                Limit 1";
+                
+                mysqli_query($db, $sqlDelete);
+            }
+        }
+    }
 
     // If Logged in as customer, only show orders for that customer
     $sqlCustomerLimit = "";
@@ -57,6 +80,13 @@
 
     $Orders = mysqli_query($db, $sqlOrders);
 
+    // Get List of Customers
+    $sqlCustomers = "   SELECT
+                            c.CustomerID,
+                            c.CustomerName
+                        FROM tblCustomer c";
+    
+    $Customers = mysqli_query($db, $sqlCustomers);
 ?>
 
 <script>
@@ -69,6 +99,14 @@
         else{
             SubTable.hidden = true;
         }
+    }
+
+    function deleteOrder(OrderID){
+        window.location.replace(`vieworders.php?DeleteID=${OrderID}`);
+    }
+
+    function addOrder(){
+        window.location.replace("addorder.php");
     }
 </script>
 
@@ -101,7 +139,8 @@
                         <th>Delivery Date</th>
                         <th>Total Cost</th>
                         <th>Show More</th>
-                        <th>Edit</th>
+                        <th <?php echo(hideContent(5)); ?>>Edit</th>
+                        <th <?php echo(hideContent(5)); ?>>Delete</th>
                     </tr>
                 </thead>
 
@@ -127,7 +166,8 @@
                                             <td>$DeliveryDate</td>
                                             <td>£$TotalCost</td>
                                             <td class='info'><button type='button' onclick='showSubTable($OrderID)'>&#9432;</button></td>
-                                            <td class='delete' $PermissionCheck><button type=button onclick='editOrder($OrderID)'>&#128393;</button></td>
+                                            <td class='edit' $PermissionCheck><button type=button onclick='editOrder($OrderID)'>&#128393;</button></td>
+                                            <td class='delete' $PermissionCheck><button type=button onclick='deleteOrder($OrderID)'>&#128465;</button></td>
                                         </tr>
                                     ");
 
@@ -146,8 +186,7 @@
 
                                 echo("
                                         <tr id='SubTable-$OrderID' hidden>
-                                            <td></td>
-                                            <td colspan='7'>
+                                            <td colspan='9'>
                                                 <table class='SubTable'>
                                                     <thead>
                                                         <tr>
@@ -193,7 +232,7 @@
                         else {
                             echo("
                                     <tr>
-                                        <td colspan='8'>No Results Found.</td>
+                                        <td colspan='9'>No Results Found.</td>
                                     </tr>
                                 ");
                         }
@@ -202,14 +241,14 @@
 
                 <tfoot>
                     <tr>
-                        <td colspan="8"><i><?php echo("$Orders->num_rows Results.") ?></i></td>
+                        <td colspan="9"><i><?php echo("$Orders->num_rows Results.") ?></i></td>
                     </tr>
                 </tfoot>
             </table>
 
             <br>
-        
-            <button type="button" id="NewOrderButton">Add New Order</button>
+
+            <button type="button" id="NewOrderButton" onclick="addOrder()">Add New Order</button>
         </section>
     </main>
 
