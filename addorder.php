@@ -164,7 +164,28 @@
         }
         elseif(isset($_GET['OrderID'])){
             // If OrderID Given, Need to load basket.txt with Order Products from Database as Order is being edited.
+            $OrderID = $_GET['OrderID'];
             
+            $sql = "SELECT
+                        op.SystemProductID,
+                        op.Quantity
+                    FROM tblOrderProducts op
+                    WHERE op.OrderID = $OrderID";
+
+            $result = mysqli_query($db, $sql);
+
+            $basket = fopen("basket.txt", "w");
+
+            while($row = mysqli_fetch_assoc($result)){
+                $ProductID = $row['SystemProductID'];
+                $qty = $row['Quantity'];
+
+                fwrite($basket, "$ProductID,$qty;");
+            }
+
+            fclose($basket);
+
+            $basketContents = GetBasketContents();
         }
         else{
             $basketContents = GetBasketContents();
