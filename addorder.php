@@ -6,8 +6,60 @@
 
     checkLoginPermissions(5);
 
+    function GetBasketContents(){
+        if(file_exists("basket.txt")){
+            // Open basket.txt
+            $basket = fopen("basket.txt", "r");
+
+            if(filesize("basket.txt") > 0){
+                // Get contents of basket.txt as a string
+                $basketContents = fread($basket, filesize("basket.txt"));
+
+                // Split contents into an array (i.e [Product1, Product2, Product3])
+                $basketContents = explode(";", $basketContents);
+                
+                // Split each element into an array of [ProductID, QTY]
+                foreach($basketContents as &$value){
+                    $value = explode(",", $value);
+                }
+
+                // Remove last element in array due to final basket item ending with a ;
+                array_pop($basketContents);
+
+                // Final array structure is:
+                //      [[ProductID1, QTY1]], [[ProductID2, QTY2]], [[ProductID3, QTY3]]
+
+                // Close Text File
+                fclose($basket);
+            }
+            else{
+                $basketContents = false;
+            }
+        }
+        else{
+            $basketContents = false;
+        }
+
+        return($basketContents);
+    }
+
+    function GetProductInfo($db, $ProductID){
+        // Get Product Name and Cost Per Unit
+        $sql = "SELECT
+                    sp.ProductName,
+                    sp.CostPerUnit
+                FROM tblSystemProduct sp
+                WHERE sp.SystemProductID = $ProductID
+                LIMIT 1";
+
+        $result = mysqli_query($db, $sql);
+        $ProductInfo = mysqli_fetch_assoc($result);
+
+        return $ProductInfo;
+    }
+
     if($_SERVER['REQUEST_METHOD'] == "GET"){
-        // Post when adding to basket
+        // Get when adding to basket
 
         // Textfile called basket.txt contains ProductID's and QTY's
         // Each entity is in the format: 
@@ -27,28 +79,43 @@
             // Close basket.txt
             fclose($basket);
 
-            // Reopen basket.txt to account for changes
-            $basket = fopen("basket.txt", "r");
+            $basketContents = GetBasketContents();
+        }
+        elseif(isset($_GET['DeleteIndex'])){
+            $basketContents = GetBasketContents();
 
-            // Get contents of basket.txt as a string
-            $basketContents = fread($basket, filesize("basket.txt"));
+            if($basketContents != false){
+                $DeleteIndex = $_GET['DeleteIndex'];
 
-            // Split contents into an array (i.e [Product1, Product2, Product3])
-            $basketContents = explode(";", $basketContents);
-            
-            // Split each element into an array of [ProductID, QTY]
-            foreach($basketContents as &$value){
-                $value = explode(",", $value);
+                // Unset DeletedIndex
+                unset($basketContents[$DeleteIndex]);
+
+                // Reindex array
+                $basketContents = array_values($basketContents);
+
+                // Rewrite Array to basket.txt
+                $basket = fopen("basket.txt", "w");
+                foreach($basketContents as &$value){
+                    fwrite($basket, "$value[0],$value[1];");
+                }
+                fclose($basket);
+
+                // If basketContents Array is empty after changes, Unset it
+                if(count($basketContents) == 0){
+                    unset($basketContents);
+                }
+            }
+            else{
+                unset($basketContents);
+            }
+        }
+        elseif(isset($_GET['UploadStatus'])){
+            $basketContents = GetBasketContents();
+
+            if($basketContents == false){
+                unset($basketContents);
             }
 
-            // Remove last element in array due to final basket item ending with a ;
-            array_pop($basketContents);
-
-            // Final array structure is:
-            //      [[ProductID1, QTY1]], [[ProductID2, QTY2]], [[ProductID3, QTY3]]
-
-            // Close Text File
-            fclose($basket);
         }
         else{
             // If not passed any values, new order so remove basket.txt to empty it
@@ -60,6 +127,82 @@
     }
     elseif($_SERVER['REQUEST_METHOD'] == "POST"){
         // Post when submitting order to DB
+
+        // Get Posted Values
+        $CustomerID = $_POST['Customer'];
+        $DeliveryDate = $_POST['DeliveryDate'];
+
+        // Get StaffID
+        $StaffID = $_SESSION['UserID'];
+
+        // Create Order Record in DB
+        $sql = "INSERT INTO tblOrder (CustomerID, StaffID, DeliveryDate)
+                VALUES ($CustomerID, $StaffID, '$DeliveryDate')";
+
+        mysqli_query($db, $sql);
+
+        // Get OrderID of the inserted order
+        // (Most recent order with the same params and a TotalCost of 0) 
+        $sql = "SELECT
+                    o.OrderID
+                FROM tblOrder o
+                WHERE o.CustomerID = $CustomerID
+                    AND o.StaffID = $StaffID
+                    AND o.DeliveryDate = '$DeliveryDate'
+                    AND o.TotalCost = 0
+                ORDER BY o.CreationDate DESC
+                LIMIT 1";
+
+        $result = mysqli_query($db, $sql);
+        $OrderID = mysqli_fetch_assoc($result)['OrderID'];
+
+        // Create Order Products
+        $basketContents = GetBasketContents();
+
+        if($basketContents != false){
+            $TotalCost = 0;
+
+            // Create an Order Products Record for each Product in the Basket
+            foreach($basketContents as &$value){
+                $ProductID = $value[0];
+                $qty = $value[1];
+
+                $ProductInfo = GetProductInfo($db, $ProductID);
+
+                $Subtotal = $qty * $ProductInfo['CostPerUnit'];
+                $TotalCost += $Subtotal;
+
+                $sql = "INSERT INTO tblOrderProducts (OrderID, SystemProductID, Quantity, Subtotal)
+                        VALUES ($OrderID, $ProductID, $qty, $Subtotal)";
+
+                mysqli_query($db, $sql);
+            }
+
+            // Update TotalCost on order
+            $sql = "UPDATE tblOrder o
+                    SET o.TotalCost = $TotalCost
+                    WHERE o.OrderID = $OrderID
+                    LIMIT 1";
+
+            mysqli_query($db, $sql);
+
+            // Return to vieworders.php
+            $message = "Order has been placed.";
+            header("location: vieworders.php?UploadStatus=$message&SearchText=$OrderID");
+        }
+        else{
+            // Remove the Order Record from the DB
+            $sql = "DELETE FROM tblOrder
+                    WHERE OrderID = $OrderID
+                    LIMIT 1";
+
+            mysqli_query($db, $sql);
+
+            // Return to addorder.php with error message
+            $message = "Error: Basket is empty.";
+            header("location: addorder.php?UploadStatus=$message");
+        }
+
     }
     else{
         header("location: index.php");
@@ -90,12 +233,20 @@
     }
 
     function AddToBasket(){
-        if(document.getElementById("Product") != -1){
+        if(document.getElementById("Product").value != -1 && document.getElementById("qty").value != ''){
             ProductID = document.getElementById("Product").value;
             qty = document.getElementById("qty").value;
 
             document.location.replace(`addorder.php?ProductID=${ProductID}&qty=${qty}`);
         }
+        else{
+            message = "Error: Please select a product to add."
+            document.location.replace(`addorder.php?UploadStatus=${message}`);
+        }
+    }
+
+    function RemoveFromBasket(Index){
+        document.location.replace(`addorder.php?DeleteIndex=${Index}`);
     }
 </script>
 
@@ -113,6 +264,11 @@
     <main class="content">
         <section id="NewOrder" style="width:50%; float:left;">
             <h2>Add New Order:</h2>
+
+            <!-- Error / Success Message -->
+            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
+
+            <!-- New Order Form -->
             <form id="NewOrderForm" action="addorder.php" method="post">
                 <fieldset class="inputs">
                     <legend><h3>Order Information:</h3></legend>
@@ -136,7 +292,7 @@
 
                     <!-- Delivery Date -->
                     <label for="DeliveryDate">Delivery Date:</label>
-                    <input type="date" id="DeliveryDate" name="DeliveryDate" min="<?php echo date('Y-m-d'); ?>">
+                    <input type="date" id="DeliveryDate" name="DeliveryDate" min="<?php echo date('Y-m-d'); ?>" required>
                 </fieldset>
 
                 <fieldset class="inputs">
@@ -183,20 +339,67 @@
         </section>
 
         <section id="basket" style="width:50%; float:right;">
-            <h2>Basket:</h2>
+            <table>
+                <caption><h2>Basket</h2></caption>
 
-            <?php 
-                if(isset($basketContents)){
-                    echo("<ul>");
-                    foreach($basketContents as &$value){
-                        echo("<li>Product: $value[0], QTY: $value[1]</li>");
-                    }
-                    echo("</ul>");
-                }
-                else{
-                    echo("<p>Basket Empty</p>");
-                }
-            ?>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php 
+                        if(isset($basketContents)){
+                            $index = 0;
+                            $TotalCost = 0;
+                            foreach($basketContents as &$value){
+                                $ProductID = $value[0];
+                                $qty = $value[1];
+
+                                $ProductInfo = GetProductInfo($db, $ProductID);
+
+                                $ProductName = $ProductInfo['ProductName'];
+                                $Subtotal = $qty * $ProductInfo['CostPerUnit'];
+
+                                $TotalCost += $Subtotal;
+                                $Subtotal = "£" . number_format($Subtotal, 2);
+
+                                echo("
+                                        <tr>
+                                            <td>$ProductName</td>
+                                            <td>$qty</td>
+                                            <td>$Subtotal</td>
+                                            <td><button type='button' onclick='RemoveFromBasket($index)'>&#10006;</button></td>
+                                        </tr>
+                                    ");
+
+                                $index++;
+                            }
+
+                            $TotalCost = number_format($TotalCost, 2);
+                        }
+                        else{
+                            echo("  <tr>
+                                        <td colspan='4'>Basket Empty</td>
+                                    </tr>
+                                ");
+                        }
+                    ?>
+                </tbody>
+
+                <!-- Hide tfoot if basket empty -->
+                <tfoot <?php echo(isset($basketContents) ? "" : "style='display:none;'") ?>>
+                    <tr>
+                        <td colspan="2" style="text-align:right;"><b>Total:</b></td>
+                        <td><b><?php echo("£$TotalCost"); ?></b></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
         </section>
     </main>
 

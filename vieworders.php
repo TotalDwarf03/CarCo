@@ -126,7 +126,8 @@
         <section id="Orders">
             <?php include("Widgets/SearchBar.php"); ?>
 
-            <br>
+            <!-- Error / Success Message -->
+            <p <?php echo(str_contains($_GET['UploadStatus'] ?? "", "Error") ? "class='error'" : "class='message'"); ?>><?php echo($_GET['UploadStatus'] ?? '') ?></p>
 
             <table>
                 <caption><h2>Orders</h2></caption>
@@ -248,7 +249,7 @@
 
             <br>
 
-            <button type="button" id="NewOrderButton" onclick="addOrder()">Add New Order</button>
+            <button type="button" id="NewOrderButton" onclick="addOrder()" <?php echo(hideContent(5)); ?>>Add New Order</button>
         </section>
     </main>
 
