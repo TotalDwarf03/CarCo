@@ -64,6 +64,7 @@
     $sqlOrders = "  SELECT
                         o.OrderID,
                         o.CreationDate,
+                        o.CustomerID,
                         c.CustomerName,
                         CONCAT(s.Forename, ' ', s.Surname) as StaffName,
                         o.TotalCost,
@@ -106,7 +107,12 @@
     }
 
     function addOrder(){
-        window.location.replace("addorder.php");
+        window.location.replace("addorder.php?NewBasket=1");
+    }
+
+    function editOrder(CustomerID, OrderID){
+        
+        window.location.replace(`addorder.php?CustomerID=${CustomerID}&OrderID=${OrderID}`);
     }
 </script>
 
@@ -151,6 +157,7 @@
                             while($row = mysqli_fetch_assoc($Orders)) {
                                 $OrderID = $row['OrderID'];
                                 $CreationDate = $row['CreationDate'];
+                                $CustomerID = $row['CustomerID'];
                                 $CustomerName = $row['CustomerName'];
                                 $StaffName = $row['StaffName'];
                                 $DeliveryDate = $row['DeliveryDate'];
@@ -167,7 +174,7 @@
                                             <td>$DeliveryDate</td>
                                             <td>£$TotalCost</td>
                                             <td class='info'><button type='button' onclick='showSubTable($OrderID)'>&#9432;</button></td>
-                                            <td class='edit' $PermissionCheck><button type=button onclick='editOrder($OrderID)'>&#128393;</button></td>
+                                            <td class='edit' $PermissionCheck><button type=button onclick='editOrder($CustomerID, $OrderID)'>&#128393;</button></td>
                                             <td class='delete' $PermissionCheck><button type=button onclick='deleteOrder($OrderID)'>&#128465;</button></td>
                                         </tr>
                                     ");

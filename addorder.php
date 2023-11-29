@@ -58,6 +58,49 @@
         return $ProductInfo;
     }
 
+    function GetSelectedCustomer($CustomerID){
+        if(isset($_GET['CustomerID'])){
+            if($_GET['CustomerID'] == $CustomerID){
+                return 'selected';
+            }
+            else{
+                return '';
+            }
+        }
+        else{
+            if($CustomerID == -1){
+                return 'selected';
+            }
+            else{
+                return '';
+            }
+        }
+    }
+
+    function GetDeliveryDate($db){
+        if(isset($_GET['OrderID'])){
+            $OrderID = $_GET['OrderID'];
+
+            $sql = "SELECT
+                        o.DeliveryDate
+                    FROM tblOrder o
+                    WHERE o.OrderID = $OrderID
+                    LIMIT 1";
+
+            $result = mysqli_query($db, $sql);
+            $DeliveryDate = mysqli_fetch_assoc($result)['DeliveryDate'];
+
+            return "value='$DeliveryDate'";
+        }
+        elseif(isset($_GET['DeliveryDate'])){
+            $DeliveryDate = $_GET['DeliveryDate'];
+            return "value='$DeliveryDate'";
+        }
+        else{
+            return '';
+        }
+    }
+
     if($_SERVER['REQUEST_METHOD'] == "GET"){
         // Get when adding to basket
 
@@ -66,6 +109,8 @@
         //      <ProductID>,<QTY>;
 
         if(isset($_GET['ProductID'])){
+            // If Adding a new Basket Item
+
             // Get Inputed Product and QTY
             $ProductID = $_GET['ProductID'];
             $qty = $_GET['qty'];
@@ -82,6 +127,8 @@
             $basketContents = GetBasketContents();
         }
         elseif(isset($_GET['DeleteIndex'])){
+            // If Deleting a Basket Item
+
             $basketContents = GetBasketContents();
 
             if($basketContents != false){
@@ -109,18 +156,21 @@
                 unset($basketContents);
             }
         }
-        elseif(isset($_GET['UploadStatus'])){
+        elseif(isset($_GET['NewBasket'])){
+            // If NewBasket flag, Remove old basket.txt if it exists
+            if(file_exists("basket.txt")){
+                unlink("basket.txt");
+            }
+        }
+        elseif(isset($_GET['OrderID'])){
+            // If OrderID Given, Need to load basket.txt with Order Products from Database as Order is being edited.
+            
+        }
+        else{
             $basketContents = GetBasketContents();
 
             if($basketContents == false){
                 unset($basketContents);
-            }
-
-        }
-        else{
-            // If not passed any values, new order so remove basket.txt to empty it
-            if(file_exists("basket.txt")){
-                unlink("basket.txt");
             }
         }
 
@@ -207,7 +257,7 @@
 
             // Return to addorder.php with error message
             $message = "Error: Basket is empty.";
-            header("location: addorder.php?UploadStatus=$message");
+            header("location: addorder.php?UploadStatus=$message&CustomerID=$CustomerID&DeliveryDate=$DeliveryDate");
         }
 
     }
@@ -244,16 +294,25 @@
             ProductID = document.getElementById("Product").value;
             qty = document.getElementById("qty").value;
 
-            document.location.replace(`addorder.php?ProductID=${ProductID}&qty=${qty}`);
+            CustomerID = document.getElementById("Customer").value;
+            DeliveryDate = document.getElementById("DeliveryDate").value;
+
+            document.location.replace(`addorder.php?ProductID=${ProductID}&qty=${qty}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}`);
         }
         else{
             message = "Error: Please select a product to add."
+            CustomerID = document.getElementById("Customer").value;
+            DeliveryDate = document.getElementById("DeliveryDate").value;
+
             document.location.replace(`addorder.php?UploadStatus=${message}`);
         }
     }
 
     function RemoveFromBasket(Index){
-        document.location.replace(`addorder.php?DeleteIndex=${Index}`);
+        CustomerID = document.getElementById("Customer").value;
+        DeliveryDate = document.getElementById("DeliveryDate").value;
+
+        document.location.replace(`addorder.php?DeleteIndex=${Index}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}`);
     }
 </script>
 
@@ -278,21 +337,55 @@
             <!-- New Order Form -->
             <form id="NewOrderForm" action="addorder.php" method="post">
                 <fieldset class="inputs">
+                    <legend><h3>Add Product to Order:</h3></legend>
+                    
+                    <!-- Product Drop Down -->
+                    <label for="Product">Product:</label>
+                    <select id="Product" name="Product" onchange="document.getElementById('qty').value = 1;">
+                        <optgroup label="Product">
+                            <option value=-1 disabled selected hidden>-- Select a Product --</option>
+                            
+                            <?php
+                                while($row = mysqli_fetch_assoc($Products)){
+                                    $ProductID = $row['SystemProductID'];
+                                    $ProductName = $row['ProductName'];
+                                    
+                                    echo("
+                                    <option value='$ProductID'>$ProductName</option>
+                                        ");
+                                    }
+                            ?>
+                        </optgroup>
+                    </select>
+
+                    <!-- Quantity -->
+                    <label for="qty">Quantity:</label>
+                    <input type="number" id="qty" name="qty" min=1>
+                    
+                    <br>
+                    
+                    <!-- Add to Basket -->
+                    <input type="button" id="addToBasket" name="addToBasket" value="Add to Basket" onclick="AddToBasket();">
+                </fieldset>
+
+                <fieldset class="inputs">
                     <legend><h3>Order Information:</h3></legend>
 
                     <!-- Customer Drop Down -->
                     <label for="Customer">Customer:</label>
                     <select id="Customer" name="Customer">
                         <optgroup label="Customer">
-                            <option value=999 disabled selected hidden>-- Select a Customer --</option>
+                            <option value=-1 disabled hidden <?php echo(GetSelectedCustomer(-1)); ?>>-- Select a Customer --</option>
 
                             <?php
                                 while($row = mysqli_fetch_assoc($Customers)){
                                     $CustomerID = $row['CustomerID'];
                                     $CustomerName = $row['CustomerName'];
 
+                                    $selected = GetSelectedCustomer($CustomerID);
+
                                     echo("
-                                            <option value='$CustomerID'>$CustomerName</option>
+                                            <option value='$CustomerID' $selected>$CustomerName</option>
                                         ");
                                 }
                             ?>
@@ -301,39 +394,7 @@
 
                     <!-- Delivery Date -->
                     <label for="DeliveryDate">Delivery Date:</label>
-                    <input type="date" id="DeliveryDate" name="DeliveryDate" min="<?php echo date('Y-m-d'); ?>" required>
-                </fieldset>
-
-                <fieldset class="inputs">
-                    <legend><h3>Add Product to Order:</h3></legend>
-
-                    <!-- Product Drop Down -->
-                    <label for="Product">Product:</label>
-                    <select id="Product" name="Product" onchange="document.getElementById('qty').value = 1;">
-                        <optgroup label="Product">
-                            <option value="-1" disabled selected hidden>-- Select a Product --</option>
-
-                            <?php
-                                while($row = mysqli_fetch_assoc($Products)){
-                                    $ProductID = $row['SystemProductID'];
-                                    $ProductName = $row['ProductName'];
-
-                                    echo("
-                                            <option value='$ProductID'>$ProductName</option>
-                                        ");
-                                }
-                            ?>
-                        </optgroup>
-                    </select>
-
-                    <!-- Quantity -->
-                    <label for="qty">Quantity:</label>
-                    <input type="number" id="qty" name="qty" min=1>
-
-                <br>
-
-                <!-- Add to Basket -->
-                <input type="button" id="addToBasket" name="addToBasket" value="Add to Basket" onclick="AddToBasket();">
+                    <input type="date" id="DeliveryDate" name="DeliveryDate" min="<?php echo date('Y-m-d');?>" <?php echo(GetDeliveryDate($db)); ?> required>
                 </fieldset>
 
                 <fieldset>
