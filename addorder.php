@@ -128,6 +128,13 @@
     elseif($_SERVER['REQUEST_METHOD'] == "POST"){
         // Post when submitting order to DB
 
+        // If Customer not set, no customer selected
+        // Therefore redirect back to addorder.php
+        if(!isset($_POST['Customer'])){
+            $message = "Error: Please select a customer.";
+            header("location: addorder.php?UploadStatus=$message");
+        }
+        
         // Get Posted Values
         $CustomerID = $_POST['Customer'];
         $DeliveryDate = $_POST['DeliveryDate'];
@@ -277,6 +284,8 @@
                     <label for="Customer">Customer:</label>
                     <select id="Customer" name="Customer">
                         <optgroup label="Customer">
+                            <option value=999 disabled selected hidden>-- Select a Customer --</option>
+
                             <?php
                                 while($row = mysqli_fetch_assoc($Customers)){
                                     $CustomerID = $row['CustomerID'];
@@ -302,7 +311,7 @@
                     <label for="Product">Product:</label>
                     <select id="Product" name="Product" onchange="document.getElementById('qty').value = 1;">
                         <optgroup label="Product">
-                            <option disabled selected value=-1>-- Select a Product --</option>
+                            <option value="-1" disabled selected hidden>-- Select a Product --</option>
 
                             <?php
                                 while($row = mysqli_fetch_assoc($Products)){
