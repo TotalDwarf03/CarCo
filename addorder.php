@@ -78,7 +78,7 @@
     }
 
     function GetDeliveryDate($db){
-        if(isset($_GET['OrderID'])){
+        if(isset($_GET['Edit'])){
             $OrderID = $_GET['OrderID'];
 
             $sql = "SELECT
@@ -162,8 +162,8 @@
                 unlink("basket.txt");
             }
         }
-        elseif(isset($_GET['OrderID'])){
-            // If OrderID Given, Need to load basket.txt with Order Products from Database as Order is being edited.
+        elseif(isset($_GET['Edit'])){
+            // If Edit flag, need to load basket with Order Product Records for order
             $OrderID = $_GET['OrderID'];
             
             $sql = "SELECT
@@ -209,6 +209,22 @@
         // Get Posted Values
         $CustomerID = $_POST['Customer'];
         $DeliveryDate = $_POST['DeliveryDate'];
+        $OrderID = $_POST['OrderID'];
+
+        // If OrderID was set, the order is edited and already exists
+        // Therefore, delete the old order before inserting a new one
+        if($OrderID != ''){
+            $sqlDelete = "  DELETE FROM tblOrderProducts
+                            WHERE OrderID = $OrderID";
+
+            mysqli_query($db, $sqlDelete);
+
+            $sqlDelete = "  DELETE FROM tblOrder
+                            WHERE OrderID = $OrderID
+                            Limit 1";
+            
+            mysqli_query($db, $sqlDelete);
+        }
 
         // Get StaffID
         $StaffID = $_SESSION['UserID'];
@@ -317,23 +333,26 @@
 
             CustomerID = document.getElementById("Customer").value;
             DeliveryDate = document.getElementById("DeliveryDate").value;
+            OrderID = document.getElementById("OrderID").value;
 
-            document.location.replace(`addorder.php?ProductID=${ProductID}&qty=${qty}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}`);
+            document.location.replace(`addorder.php?ProductID=${ProductID}&qty=${qty}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}&OrderID=${OrderID}`);
         }
         else{
             message = "Error: Please select a product to add."
             CustomerID = document.getElementById("Customer").value;
             DeliveryDate = document.getElementById("DeliveryDate").value;
+            OrderID = document.getElementById("OrderID").value;
 
-            document.location.replace(`addorder.php?UploadStatus=${message}`);
+            document.location.replace(`addorder.php?UploadStatus=${message}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}&OrderID=${OrderID}`);
         }
     }
 
     function RemoveFromBasket(Index){
         CustomerID = document.getElementById("Customer").value;
         DeliveryDate = document.getElementById("DeliveryDate").value;
+        OrderID = document.getElementById("OrderID").value;
 
-        document.location.replace(`addorder.php?DeleteIndex=${Index}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}`);
+        document.location.replace(`addorder.php?DeleteIndex=${Index}&CustomerID=${CustomerID}&DeliveryDate=${DeliveryDate}&OrderID=${OrderID}`);
     }
 </script>
 
@@ -359,7 +378,7 @@
             <form id="NewOrderForm" action="addorder.php" method="post">
                 <fieldset class="inputs">
                     <legend><h3>Add Product to Order:</h3></legend>
-                    
+
                     <!-- Product Drop Down -->
                     <label for="Product">Product:</label>
                     <select id="Product" name="Product" onchange="document.getElementById('qty').value = 1;">
@@ -391,6 +410,9 @@
 
                 <fieldset class="inputs">
                     <legend><h3>Order Information:</h3></legend>
+
+                    <!-- OrderID (Hidden) -->
+                    <input type="hidden" id="OrderID" name="OrderID" value="<?php echo($_GET['OrderID'] ?? ''); ?>">
 
                     <!-- Customer Drop Down -->
                     <label for="Customer">Customer:</label>

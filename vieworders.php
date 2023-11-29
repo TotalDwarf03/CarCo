@@ -112,7 +112,7 @@
 
     function editOrder(CustomerID, OrderID){
         
-        window.location.replace(`addorder.php?CustomerID=${CustomerID}&OrderID=${OrderID}`);
+        window.location.replace(`addorder.php?Edit=1&CustomerID=${CustomerID}&OrderID=${OrderID}`);
     }
 </script>
 
