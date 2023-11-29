@@ -209,22 +209,7 @@
         // Get Posted Values
         $CustomerID = $_POST['Customer'];
         $DeliveryDate = $_POST['DeliveryDate'];
-        $OrderID = $_POST['OrderID'];
-
-        // If OrderID was set, the order is edited and already exists
-        // Therefore, delete the old order before inserting a new one
-        if($OrderID != ''){
-            $sqlDelete = "  DELETE FROM tblOrderProducts
-                            WHERE OrderID = $OrderID";
-
-            mysqli_query($db, $sqlDelete);
-
-            $sqlDelete = "  DELETE FROM tblOrder
-                            WHERE OrderID = $OrderID
-                            Limit 1";
-            
-            mysqli_query($db, $sqlDelete);
-        }
+        $OldOrderID = $_POST['OrderID'];
 
         // Get StaffID
         $StaffID = $_SESSION['UserID'];
@@ -235,7 +220,7 @@
 
         mysqli_query($db, $sql);
 
-        // Get OrderID of the inserted order
+        // Get OrderID of the new inserted order
         // (Most recent order with the same params and a TotalCost of 0) 
         $sql = "SELECT
                     o.OrderID
@@ -249,11 +234,28 @@
 
         $result = mysqli_query($db, $sql);
         $OrderID = mysqli_fetch_assoc($result)['OrderID'];
-
+        
         // Create Order Products
         $basketContents = GetBasketContents();
 
         if($basketContents != false){
+            // If the Basket isn't empty
+
+            // If OldOrderID isn't empty, the order is edited and already exists
+            // Therefore, delete the old order
+            if($OldOrderID != ''){
+                $sqlDelete = "  DELETE FROM tblOrderProducts
+                                WHERE OrderID = $OldOrderID";
+
+                mysqli_query($db, $sqlDelete);
+
+                $sqlDelete = "  DELETE FROM tblOrder
+                                WHERE OrderID = $OldOrderID
+                                Limit 1";
+                
+                mysqli_query($db, $sqlDelete);
+            }
+
             $TotalCost = 0;
 
             // Create an Order Products Record for each Product in the Basket
@@ -285,7 +287,7 @@
             header("location: vieworders.php?UploadStatus=$message&SearchText=$OrderID");
         }
         else{
-            // Remove the Order Record from the DB
+            // Remove the New Order Record from the DB
             $sql = "DELETE FROM tblOrder
                     WHERE OrderID = $OrderID
                     LIMIT 1";
@@ -294,7 +296,7 @@
 
             // Return to addorder.php with error message
             $message = "Error: Basket is empty.";
-            header("location: addorder.php?UploadStatus=$message&CustomerID=$CustomerID&DeliveryDate=$DeliveryDate");
+            header("location: addorder.php?UploadStatus=$message&CustomerID=$CustomerID&DeliveryDate=$DeliveryDate&OrderID=$OldOrderID");
         }
 
     }
