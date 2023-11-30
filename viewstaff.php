@@ -13,7 +13,8 @@
 
     $LoggedInStaffID = $_SESSION['UserID'];
 
-    // Get List of Staff (Excl. Logged in user as don't want users to give self permissions)
+    // Get List of Staff
+    // (Excl. Logged in user as don't want users to give self permissions and Admin user so super user always exists)
     $sql = "SELECT
                 s.StaffID,
                 s.Username,
@@ -22,7 +23,7 @@
                 s.Email
             FROM tblStaff s
             WHERE s.Username LIKE '%$SearchText%'
-                AND s.StaffID != $LoggedInStaffID
+                AND s.StaffID NOT IN ($LoggedInStaffID, 1)
             ORDER BY s.Username
             $sqlResultLimit";
 
