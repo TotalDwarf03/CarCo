@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 22, 2023 at 07:00 PM
+-- Generation Time: Nov 30, 2023 at 10:48 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `carco`
 --
+CREATE DATABASE IF NOT EXISTS `carco` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `carco`;
 
 -- --------------------------------------------------------
 
@@ -27,6 +29,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `tblcustomer`
 --
 
+DROP TABLE IF EXISTS `tblcustomer`;
 CREATE TABLE `tblcustomer` (
   `CustomerID` int(11) NOT NULL,
   `CustomerName` varchar(50) NOT NULL,
@@ -39,19 +42,17 @@ CREATE TABLE `tblcustomer` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tblcustomer`
+-- Truncate table before insert `tblcustomer`
 --
 
-INSERT INTO `tblcustomer` (`CustomerID`, `CustomerName`, `Image`, `AddressLine1`, `AddressLine2`, `AddressLine3`, `Postcode`, `Telephone`) VALUES
-(1, 'Bettws Service Station', 'Images/Customers/1.jpg', 'Heol Dewi Sant', 'Bettws', 'Bridgend', 'CF32 8TA', '01656 722440'),
-(2, 'BCP Bridgend', 'Images/Customers/2.jpg', '5 Kestrel Cl', 'Bridgend Industrial Estate', 'Bridgend', 'CF31 3RW', '01656 674011');
-
+TRUNCATE TABLE `tblcustomer`;
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `tblcustomerlogin`
 --
 
+DROP TABLE IF EXISTS `tblcustomerlogin`;
 CREATE TABLE `tblcustomerlogin` (
   `CustomerLoginID` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL,
@@ -62,20 +63,17 @@ CREATE TABLE `tblcustomerlogin` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tblcustomerlogin`
+-- Truncate table before insert `tblcustomerlogin`
 --
 
-INSERT INTO `tblcustomerlogin` (`CustomerLoginID`, `CustomerID`, `Forename`, `Surname`, `Username`, `Password`) VALUES
-(1, 1, 'Steve', 'Daniel', 'BSSSteve', '$2y$10$yfGAUuS8TnkSuMys9PpRqO1bOOJMdczmdB3J6fcSzHBs.mBk4MRBi'),
-(3, 1, 'Ceri', 'Ryall', 'BSSCeri', '$2y$10$pnPB/o13ATRWl6dMJ6gBUedzQTcAmLywbA0dTVXaqLPiHOVkpGbGa'),
-(4, 2, 'Chris', 'Jury', 'BCPChris', '$2y$10$oGtuXQKa6dxWUutgbtRBe.HmK2TWTme7eTK.2My1yk8gIKsS.BAO6');
-
+TRUNCATE TABLE `tblcustomerlogin`;
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `tblorder`
 --
 
+DROP TABLE IF EXISTS `tblorder`;
 CREATE TABLE `tblorder` (
   `OrderID` int(11) NOT NULL,
   `CreationDate` datetime NOT NULL,
@@ -85,12 +83,18 @@ CREATE TABLE `tblorder` (
   `DeliveryDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblorder`
+--
+
+TRUNCATE TABLE `tblorder`;
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `tblorderproducts`
 --
 
+DROP TABLE IF EXISTS `tblorderproducts`;
 CREATE TABLE `tblorderproducts` (
   `OrderProductID` int(11) NOT NULL,
   `OrderID` int(11) NOT NULL,
@@ -99,18 +103,29 @@ CREATE TABLE `tblorderproducts` (
   `Subtotal` float(7,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblorderproducts`
+--
+
+TRUNCATE TABLE `tblorderproducts`;
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `tblpermissions`
 --
 
+DROP TABLE IF EXISTS `tblpermissions`;
 CREATE TABLE `tblpermissions` (
   `PermissionID` int(11) NOT NULL,
   `PermissionName` varchar(20) NOT NULL,
   `Description` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblpermissions`
+--
+
+TRUNCATE TABLE `tblpermissions`;
 --
 -- Dumping data for table `tblpermissions`
 --
@@ -127,6 +142,7 @@ INSERT INTO `tblpermissions` (`PermissionID`, `PermissionName`, `Description`) V
 -- Table structure for table `tblstaff`
 --
 
+DROP TABLE IF EXISTS `tblstaff`;
 CREATE TABLE `tblstaff` (
   `StaffID` int(11) NOT NULL,
   `Forename` varchar(20) NOT NULL,
@@ -137,6 +153,11 @@ CREATE TABLE `tblstaff` (
   `Password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblstaff`
+--
+
+TRUNCATE TABLE `tblstaff`;
 --
 -- Dumping data for table `tblstaff`
 --
@@ -154,12 +175,18 @@ INSERT INTO `tblstaff` (`StaffID`, `Forename`, `Surname`, `Email`, `Image`, `Use
 -- Table structure for table `tblstaffpermissions`
 --
 
+DROP TABLE IF EXISTS `tblstaffpermissions`;
 CREATE TABLE `tblstaffpermissions` (
   `StaffPermissionID` int(11) NOT NULL,
   `StaffID` int(11) NOT NULL,
   `PermissionID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblstaffpermissions`
+--
+
+TRUNCATE TABLE `tblstaffpermissions`;
 --
 -- Dumping data for table `tblstaffpermissions`
 --
@@ -180,6 +207,7 @@ INSERT INTO `tblstaffpermissions` (`StaffPermissionID`, `StaffID`, `PermissionID
 -- Table structure for table `tblsystemproduct`
 --
 
+DROP TABLE IF EXISTS `tblsystemproduct`;
 CREATE TABLE `tblsystemproduct` (
   `SystemProductID` int(11) NOT NULL,
   `SystemProductStatusID` int(11) NOT NULL,
@@ -189,6 +217,11 @@ CREATE TABLE `tblsystemproduct` (
   `CostPerUnit` float(5,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblsystemproduct`
+--
+
+TRUNCATE TABLE `tblsystemproduct`;
 --
 -- Dumping data for table `tblsystemproduct`
 --
@@ -214,11 +247,17 @@ INSERT INTO `tblsystemproduct` (`SystemProductID`, `SystemProductStatusID`, `Pro
 -- Table structure for table `tblsystemproductstatus`
 --
 
+DROP TABLE IF EXISTS `tblsystemproductstatus`;
 CREATE TABLE `tblsystemproductstatus` (
   `ProductStatusID` int(11) NOT NULL,
   `Status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Truncate table before insert `tblsystemproductstatus`
+--
+
+TRUNCATE TABLE `tblsystemproductstatus`;
 --
 -- Dumping data for table `tblsystemproductstatus`
 --
@@ -226,27 +265,6 @@ CREATE TABLE `tblsystemproductstatus` (
 INSERT INTO `tblsystemproductstatus` (`ProductStatusID`, `Status`) VALUES
 (1, 'In Stock'),
 (2, 'Out of Stock');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblsystemproducttype`
---
-
-CREATE TABLE `tblsystemproducttype` (
-  `SystemProductTypeID` int(11) NOT NULL,
-  `Type` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `tblsystemproducttype`
---
-
-INSERT INTO `tblsystemproducttype` (`SystemProductTypeID`, `Type`) VALUES
-(1, 'Filters'),
-(2, 'Fluids'),
-(3, 'Tyres'),
-(4, 'Wipers');
 
 --
 -- Indexes for dumped tables
@@ -315,12 +333,6 @@ ALTER TABLE `tblsystemproductstatus`
   ADD PRIMARY KEY (`ProductStatusID`);
 
 --
--- Indexes for table `tblsystemproducttype`
---
-ALTER TABLE `tblsystemproducttype`
-  ADD PRIMARY KEY (`SystemProductTypeID`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -377,12 +389,6 @@ ALTER TABLE `tblsystemproduct`
 --
 ALTER TABLE `tblsystemproductstatus`
   MODIFY `ProductStatusID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `tblsystemproducttype`
---
-ALTER TABLE `tblsystemproducttype`
-  MODIFY `SystemProductTypeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
